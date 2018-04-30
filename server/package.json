@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "lambda:local": "serverless invoke local --function hello --path data-with-claps.json",
+    "lambda": "serverless invoke --function hello --path data-with-claps.json"
+  },
+  "name": "applause-button",
+  "dependencies": {
+    "aws-sdk": "^2.229.1"
+  }
+}
