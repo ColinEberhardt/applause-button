@@ -1,9 +1,11 @@
 {
   "scripts": {
-    "lambda:local": "serverless invoke local --function hello --path data-with-claps.json",
-    "lambda": "serverless invoke --function hello --path data-with-claps.json"
+    "test:get-claps": "serverless invoke local --function get-claps --path test/get.json",
+    "test:update-claps": "serverless invoke local --function update-claps --path test/update.json",
+    "test:get-multiple": "serverless invoke local --function get-multiple --path test/multiple.json",
+    "deploy": "serverless deploy --stage production"
   },
-  "name": "applause-button",
+  "name": "applause-button-server",
   "dependencies": {
     "aws-sdk": "^2.229.1"
   }

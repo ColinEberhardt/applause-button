@@ -1,0 +1,170 @@
+@mixin animate-once($name) {
+  animation-name: $name;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+}
+
+@mixin centered-square($size) {
+  position: absolute;
+  width: $size;
+  height: $size;
+  margin-left: (100% - $size) / 2;
+  margin-top: (100% - $size) / 2;
+}
+
+@mixin position-fill() {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+applause-button {
+  .style-root {
+    height: 100%;
+    position: relative;
+
+    &:after {
+      content: " ";
+      display: block;
+      @include position-fill();
+      border-radius: 50%;
+      border: 1px solid gray;
+    }
+    &:hover:after {
+      border-color: inherit;
+    }
+  }
+
+  .shockwave {
+    @include position-fill();
+    border-radius: 50%;
+  }
+  &:hover:not(.clapped) {
+    .shockwave {
+      animation-name: shockwave;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in;
+    }
+  }
+
+  svg {
+    @include centered-square(60%);
+    opacity: 0.8;
+    fill: none;
+    stroke: inherit;
+    stroke-width: 2px;
+    overflow: visible;
+  }
+  &.clapped {
+    svg {
+      fill: inherit;
+      stroke: none;
+      stroke-width: 0;
+    }
+  }
+
+  .count {
+    position: absolute;
+    top: -40%;
+    width: 100%;
+    text-align: center;
+    color: gray;
+    user-select: none;
+  }
+  &.clapped {
+    .count {
+      @include animate-once(hideThenShow);
+    }
+  }
+
+  .sparkle {
+    circle {
+      opacity: 0;
+      stroke-width: 0;
+    }
+
+    $elements: 5;
+    $degrees: 360deg / $elements;
+    @for $i from 0 to $elements {
+      g:nth-child(#{$i + 1}) {
+        transform: rotate($degrees * $i) translateX(10px);
+      }
+    }
+  }
+  &.clapped {
+    .sparkle circle {
+      @include animate-once(explode);
+    }
+  }
+
+  &.clapped {
+    @include animate-once(pulse);
+  }
+}
+
+@keyframes explode {
+  0% {
+    transform: translateX(10px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(25px);
+  }
+}
+
+@keyframes shockwave {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 2px;
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+    box-shadow: 0 0 50px, inset 0 0 10px;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes hideThenShow {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  20% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  80% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -4,7 +4,7 @@ const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 AWS.config.setPromisesDependency(Promise);
 
-const getItemByKey = url =>
+const getItem = url =>
   dynamoClient
     .get({
       TableName: TABLE,
@@ -39,6 +39,19 @@ const incrementClaps = (url, claps) =>
     })
     .promise();
 
+const getItems = urls =>
+  dynamoClient
+    .batchGet({
+      RequestItems: {
+        [TABLE]: {
+          Keys: urls.map(url => ({
+            url
+          }))
+        }
+      }
+    })
+    .promise();
+
 const response = body => ({
   statusCode: 200,
   headers: {
@@ -47,32 +60,45 @@ const response = body => ({
   body: JSON.stringify(body)
 });
 
-module.exports.hello = async (event, context, callback) => {
+const getSourceUrl = event => {
   const sourceUrl = event.headers && event.headers.Referer;
   if (!sourceUrl) {
-    console.error(event);
-    callback(null, response({ error: "no referer specified", event }));
+    throw new Error("no referer specified");
   }
+  return sourceUrl;
+};
 
-  const claps = event.body ? JSON.parse(event.body).claps : undefined;
+module.exports.getClaps = async (event, context, callback) => {
+  const sourceUrl = getSourceUrl(event);
 
-  const item = await getItemByKey(sourceUrl);
-
-  if (claps) {
-    if (item.Item) {
-      await incrementClaps(sourceUrl, claps);
-    } else {
-      await putItem(sourceUrl, claps);
-    }
-    callback(
-      null,
-      response({ claps: item.Item ? item.Item.claps + claps : claps, event })
-    );
+  const item = await getItem(sourceUrl);
+  if (item.Item) {
+    callback(null, response(item.Item.claps));
   } else {
-    if (item.Item) {
-      callback(null, response({ claps: item.Item.claps, event }));
-    } else {
-      callback(null, response({ claps: 0, event }));
-    }
+    callback(null, response(0));
   }
+};
+
+module.exports.updateClaps = async (event, context, callback) => {
+  const sourceUrl = getSourceUrl(event);
+
+  const clapIncrement = Number(event.body);
+  let totalClaps;
+
+  const item = await getItem(sourceUrl);
+
+  if (item.Item) {
+    totalClaps = item.Item.claps + clapIncrement;
+    await incrementClaps(sourceUrl, clapIncrement);
+  } else {
+    totalClaps = clapIncrement;
+    await putItem(sourceUrl, clapIncrement);
+  }
+
+  callback(null, response(totalClaps));
+};
+
+module.exports.getMultiple = async (event, context, callback) => {
+  const items = await getItems(event.body);
+  callback(null, response(items.Responses.Applause));
 };
