@@ -82,7 +82,7 @@ module.exports.getClaps = async (event, context, callback) => {
 module.exports.updateClaps = async (event, context, callback) => {
   const sourceUrl = getSourceUrl(event);
 
-  const clapIncrement = Number(event.body);
+  const clapIncrement = Math.min(Number(event.body), 10);
   let totalClaps;
 
   const item = await getItem(sourceUrl);
