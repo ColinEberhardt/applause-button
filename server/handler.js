@@ -1,8 +1,12 @@
+const is = require("is_js");
 const AWS = require("aws-sdk");
 const TABLE = "Applause";
 const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 AWS.config.setPromisesDependency(Promise);
+
+// see: https://github.com/arasatasaygin/is.js/issues/154
+const isurl = url => url.match(/^http:\/\/localhost:\d*\/?$/) || is.url(url);
 
 const getItem = url =>
   dynamoClient
@@ -68,8 +72,17 @@ const getSourceUrl = event => {
   return sourceUrl;
 };
 
+const clamp = (value, lower, upper) => Math.max(lower, Math.min(value, upper));
+
+const assert = (truth, message) => {
+  if (!truth) {
+    throw new Error(`assertion failure: ${message}`);
+  }
+};
+
 module.exports.getClaps = async (event, context, callback) => {
   const sourceUrl = getSourceUrl(event);
+  assert(isurl(sourceUrl), `Referer is not a URL [${sourceUrl}]`);
 
   const item = await getItem(sourceUrl);
   if (item.Item) {
@@ -81,8 +94,11 @@ module.exports.getClaps = async (event, context, callback) => {
 
 module.exports.updateClaps = async (event, context, callback) => {
   const sourceUrl = getSourceUrl(event);
+  const claps = Number(event.body);
+  assert(isurl(sourceUrl), `Referer is not a URL [${sourceUrl}]`);
+  assert(is.not.nan(claps), `Clap count was not a number`);
 
-  const clapIncrement = Math.min(Number(event.body), 10);
+  const clapIncrement = clamp(claps, 1, 10);
   let totalClaps;
 
   const item = await getItem(sourceUrl);
@@ -99,6 +115,9 @@ module.exports.updateClaps = async (event, context, callback) => {
 };
 
 module.exports.getMultiple = async (event, context, callback) => {
+  assert(is.array(event.body), "getMultiple requires an array");
+  assert(event.body.every(isurl), "getMultiple requires an array of URLs");
+
   const items = await getItems(event.body);
   callback(null, response(items.Responses.Applause));
 };
