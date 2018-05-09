@@ -1,7 +1,6 @@
 import "document-register-element/build/document-register-element";
 
-const API =
-  "https://ltxkcod9s9.execute-api.us-east-1.amazonaws.com/production/";
+const API = "https://ltxkcod9s9.execute-api.us-east-1.amazonaws.com/production";
 
 const getClaps = () =>
   // TODO: polyfill for IE (not edge)
@@ -29,6 +28,9 @@ const toggleClass = (element, cls) => {
   setTimeout(() => {
     element.classList.add(cls);
   }, 100);
+  setTimeout(() => {
+    element.classList.remove(cls);
+  }, 1000);
 };
 
 const debounce = (fn, delay) => {
@@ -49,8 +51,11 @@ class HTMLCustomElement extends HTMLElement {
   init() {}
 }
 
+const MAX_MULTI_CLAP = 10;
+
 class ApplauseButton extends HTMLCustomElement {
   connectedCallback() {
+    this.classList.add("loading");
     this.style.display = "block";
     // when the color of the button is set via its color property, various
     // style properties are set on style-root, which are then inherited by the child elements
@@ -75,32 +80,46 @@ class ApplauseButton extends HTMLCustomElement {
     this._styleRootElement = this.querySelector(".style-root");
     this._countElement = this.querySelector(".count");
     this._updateRootColor();
+    this._totalClaps = 0;
 
-    this._multiclaps = 0;
+    this._bufferedClaps = 0;
     this._updateClaps = debounce(() => {
-      updateClaps(this._multiclaps);
-      this._multiclaps = 0;
+      if (this._totalClaps < MAX_MULTI_CLAP) {
+        const increment = Math.min(
+          this._bufferedClaps,
+          MAX_MULTI_CLAP - this._totalClaps
+        );
+        updateClaps(increment);
+        this._totalClaps += increment;
+        this._bufferedClaps = 0;
+      }
     }, 2000);
 
     this.addEventListener("mousedown", () => {
-      if (this.multiclap) {
-        toggleClass(this, "clapped");
-        this._multiclaps++;
-        this._updateClaps();
-      } else {
-        if (this.classList.contains("clapped")) {
-          return;
-        }
-        this.classList.add("clapped");
-        updateClaps(1);
+      this.classList.add("clapped");
+      if (this.classList.contains("clap-limit-exceeded")) {
+        return;
       }
+
+      toggleClass(this, "clap");
+      this._bufferedClaps++;
+      this._updateClaps();
 
       setTimeout(() => {
         this._countElement.innerHTML = Number(this._countElement.innerHTML) + 1;
       }, 250);
+
+      if (this.multiclap) {
+        if (this._bufferedClaps + this._totalClaps >= MAX_MULTI_CLAP) {
+          this.classList.add("clap-limit-exceeded");
+        }
+      } else {
+        this.classList.add("clap-limit-exceeded");
+      }
     });
 
     getClaps().then(claps => {
+      this.classList.remove("loading");
       this._countElement.innerHTML = Number(claps);
     });
   }

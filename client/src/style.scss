@@ -32,38 +32,28 @@ applause-button {
       border-radius: 50%;
       border: 1px solid gray;
     }
-    &:hover:after {
+    &:hover:after:not(.clap-limit-exceeded) {
       border-color: inherit;
     }
+  }
+
+  &.loading {
+    opacity: 0.5;
   }
 
   .shockwave {
     @include position-fill();
     border-radius: 50%;
   }
-  &:hover:not(.clapped) {
-    .shockwave {
-      animation-name: shockwave;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-      animation-timing-function: ease-in;
-    }
-  }
 
   svg {
     @include centered-square(60%);
+    @include position-fill();
     opacity: 0.8;
     fill: none;
     stroke: inherit;
     stroke-width: 2px;
     overflow: visible;
-  }
-  &.clapped {
-    svg {
-      fill: inherit;
-      stroke: none;
-      stroke-width: 0;
-    }
   }
 
   .count {
@@ -73,11 +63,6 @@ applause-button {
     text-align: center;
     color: gray;
     user-select: none;
-  }
-  &.clapped {
-    .count {
-      @include animate-once(hideThenShow);
-    }
   }
 
   .sparkle {
@@ -94,14 +79,35 @@ applause-button {
       }
     }
   }
+
   &.clapped {
-    .sparkle circle {
-      @include animate-once(explode);
+    svg {
+      fill: inherit;
+      stroke: none;
+      stroke-width: 0;
     }
   }
 
-  &.clapped {
+  &:hover:not(.clapped) {
+    .shockwave {
+      animation-name: shockwave;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in;
+    }
+  }
+
+  // CSS that is toggled to fire one-time animations
+  &.clap {
+    .sparkle circle {
+      @include animate-once(explode);
+    }
+
     @include animate-once(pulse);
+    
+    .count {
+      @include animate-once(hideThenShow);
+    }
   }
 }
 

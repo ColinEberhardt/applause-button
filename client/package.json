@@ -1,7 +1,9 @@
 {
   "name": "applause-button",
+  "description":
+    "A zero-configuration button for adding applause / claps / kudos to web pages and blog-posts",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/applause-button.js",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -18,7 +20,8 @@
     "watch": "watch \"yarn run build\" src",
     "build": "yarn run build:scss & yarn run build:js",
     "build:scss": "node-sass --output-style compressed -o dist src/style.scss",
-    "build:js": "rollup -c"
+    "build:js": "rollup -c",
+    "prepublish": "yarn run build"
   },
   "dependencies": {
     "document-register-element": "^1.8.1"
