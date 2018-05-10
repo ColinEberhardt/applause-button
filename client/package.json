@@ -2,7 +2,7 @@
   "name": "applause-button",
   "description":
     "A zero-configuration button for adding applause / claps / kudos to web pages and blog-posts",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "dist/applause-button.js",
   "license": "MIT",
   "devDependencies": {

@@ -21,14 +21,15 @@
 }
 
 applause-button {
-  .style-root {
-    height: 100%;
-    position: relative;
+  position: relative;
 
+  .style-root {
+    @include position-fill();
+    
     &:after {
+      @include position-fill();
       content: " ";
       display: block;
-      @include position-fill();
       border-radius: 50%;
       border: 1px solid gray;
     }
@@ -53,7 +54,9 @@ applause-button {
     fill: none;
     stroke: inherit;
     stroke-width: 2px;
-    overflow: visible;
+    // annoyingly bootstrap has a higher precedence rule that sets overflow to hidden
+    // hence the bang-important
+    overflow: visible !important;
   }
 
   .count {
@@ -65,7 +68,7 @@ applause-button {
     user-select: none;
   }
 
-  .sparkle {
+  g.sparkle {
     circle {
       opacity: 0;
       stroke-width: 0;
