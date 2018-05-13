@@ -93,6 +93,12 @@ const lambda = fn => {
 };
 
 module.exports.getClaps = lambda(async (event, success) => {
+  // robots do not include Referer, so fail fats
+  if (!event.headers.Referer) {
+    success("no referer set");
+    return;
+  }
+
   const sourceUrl = getSourceUrl(event);
   assert(isurl(sourceUrl), `Referer is not a URL [${sourceUrl}]`);
 
