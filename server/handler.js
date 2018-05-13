@@ -80,19 +80,31 @@ const assert = (truth, message) => {
   }
 };
 
-module.exports.getClaps = async (event, context, callback) => {
+// creates a simpler lambda interface with generic error handling capabilities
+const lambda = fn => {
+  return async (event, context, callback) => {
+    try {
+      await fn(event, success => callback(null, response(success)));
+    } catch (error) {
+      console.error(JSON.stringify({ error, event }));
+      callback("an error occured - bad luck!");
+    }
+  };
+};
+
+module.exports.getClaps = lambda(async (event, success) => {
   const sourceUrl = getSourceUrl(event);
   assert(isurl(sourceUrl), `Referer is not a URL [${sourceUrl}]`);
 
   const item = await getItem(sourceUrl);
   if (item.Item) {
-    callback(null, response(item.Item.claps));
+    success(item.Item.claps);
   } else {
-    callback(null, response(0));
+    success(0);
   }
-};
+});
 
-module.exports.updateClaps = async (event, context, callback) => {
+module.exports.updateClaps = lambda(async (event, success) => {
   const sourceUrl = getSourceUrl(event);
   const claps = Number(event.body);
   assert(isurl(sourceUrl), `Referer is not a URL [${sourceUrl}]`);
@@ -111,13 +123,13 @@ module.exports.updateClaps = async (event, context, callback) => {
     await putItem(sourceUrl, clapIncrement);
   }
 
-  callback(null, response(totalClaps));
-};
+  success(totalClaps);
+});
 
-module.exports.getMultiple = async (event, context, callback) => {
+module.exports.getMultiple = lambda(async (event, success) => {
   assert(is.array(event.body), "getMultiple requires an array");
   assert(event.body.every(isurl), "getMultiple requires an array of URLs");
 
   const items = await getItems(event.body);
-  callback(null, response(items.Responses.Applause));
-};
+  success(items.Responses.Applause);
+});
