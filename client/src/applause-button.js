@@ -55,6 +55,10 @@ const MAX_MULTI_CLAP = 10;
 
 class ApplauseButton extends HTMLCustomElement {
   connectedCallback() {
+    if (this._connected) {
+      return;
+    }
+
     this.classList.add("loading");
     this.style.display = "block";
     // when the color of the button is set via its color property, various
@@ -122,6 +126,8 @@ class ApplauseButton extends HTMLCustomElement {
       this.classList.remove("loading");
       this._countElement.innerHTML = Number(claps);
     });
+
+    this._connected = true;
   }
 
   get color() {
