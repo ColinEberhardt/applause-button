@@ -119,6 +119,8 @@ module.exports.updateClaps = lambda(async (event, success) => {
   const clapIncrement = clamp(claps, 1, 10);
   let totalClaps;
 
+  console.log(`adding ${clapIncrement} claps to ${sourceUrl}`);
+
   const item = await getItem(sourceUrl);
 
   if (item.Item) {
