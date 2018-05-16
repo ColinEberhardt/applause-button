@@ -18,6 +18,7 @@
     "semantic-release": "^15.4.1"
   },
   "scripts": {
+    "test": "echo \"no test specified\" && exit 0",
     "watch": "watch \"yarn run build\" src",
     "build": "yarn run build:scss & yarn run build:js",
     "build:scss": "node-sass --output-style compressed -o dist src/style.scss",
