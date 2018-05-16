@@ -1,8 +1,7 @@
 {
   "name": "applause-button",
-  "description":
-    "A zero-configuration button for adding applause / claps / kudos to web pages and blog-posts",
-  "version": "1.0.3",
+  "description": "A zero-configuration button for adding applause / claps / kudos to web pages and blog-posts",
+  "version": "0.0.0-development",
   "main": "dist/applause-button.js",
   "license": "MIT",
   "devDependencies": {
@@ -14,16 +13,24 @@
     "rollup-plugin-babel": "^3.0.4",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-uglify": "^3.0.0",
-    "watch": "^1.0.2"
+    "watch": "^1.0.2",
+    "travis-deploy-once": "^5.0.0",
+    "semantic-release": "^15.4.1"
   },
   "scripts": {
     "watch": "watch \"yarn run build\" src",
     "build": "yarn run build:scss & yarn run build:js",
     "build:scss": "node-sass --output-style compressed -o dist src/style.scss",
     "build:js": "rollup -c",
-    "prepublish": "yarn run build"
+    "prepublish": "yarn run build",
+    "travis-deploy-once": "travis-deploy-once",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "document-register-element": "^1.8.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ColinEberhardt/applause-button.git"
   }
 }
