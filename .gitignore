@@ -1,4 +1,2 @@
 node_modules
-client/dist
-.serverless
-_site
+dist
