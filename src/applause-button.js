@@ -128,7 +128,10 @@ class ApplauseButton extends HTMLCustomElement {
 
     getClaps().then(claps => {
       this.classList.remove("loading");
-      this._countElement.innerHTML = Number(claps);
+      const clapCount = Number(claps);
+      if (clapCount > 0) {
+        this._countElement.innerHTML = Number(claps);
+      }
     });
 
     this._connected = true;
