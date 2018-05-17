@@ -99,7 +99,11 @@ class ApplauseButton extends HTMLCustomElement {
       }
     }, 2000);
 
-    this.addEventListener("mousedown", () => {
+    this.addEventListener("mousedown", (event) => {
+      if (event.button !== 0) {
+        return;
+      }
+
       this.classList.add("clapped");
       if (this.classList.contains("clap-limit-exceeded")) {
         return;
