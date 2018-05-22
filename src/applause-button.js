@@ -1,6 +1,6 @@
 import "document-register-element/build/document-register-element";
 
-const API = "https://ltxkcod9s9.execute-api.us-east-1.amazonaws.com/production";
+const API = "https://api.applause-button.com";
 
 const getClaps = () =>
   // TODO: polyfill for IE (not edge)
@@ -99,7 +99,7 @@ class ApplauseButton extends HTMLCustomElement {
       }
     }, 2000);
 
-    this.addEventListener("mousedown", (event) => {
+    this.addEventListener("mousedown", event => {
       if (event.button !== 0) {
         return;
       }
