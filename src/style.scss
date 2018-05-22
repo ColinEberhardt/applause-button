@@ -31,7 +31,7 @@ applause-button {
       content: " ";
       display: block;
       border-radius: 50%;
-      border: 1px solid gray;
+      border: 1px solid;
     }
     &:hover:after:not(.clap-limit-exceeded) {
       border-color: inherit;
@@ -51,13 +51,31 @@ applause-button {
     @include centered-square(60%);
     @include position-fill();
     opacity: 0.8;
-    fill: none;
-    stroke: inherit;
-    stroke-width: 2px;
+    stroke: none;
     // annoyingly bootstrap has a higher precedence rule that sets overflow to hidden
     // hence the bang-important
     overflow: visible !important;
+
+    g.flat {
+      visibility: hidden;
+    }
+    g.outline {
+      visibility: visible;
+    }
   }
+
+  &.clapped {
+    svg {
+      g.flat {
+        visibility: visible;
+      }
+      g.outline {
+        visibility: hidden;
+      }
+    } 
+  }
+
+  
 
   .count {
     position: absolute;
@@ -80,14 +98,6 @@ applause-button {
       g:nth-child(#{$i + 1}) {
         transform: rotate($degrees * $i) translateX(10px);
       }
-    }
-  }
-
-  &.clapped {
-    svg {
-      fill: inherit;
-      stroke: none;
-      stroke-width: 0;
     }
   }
 
