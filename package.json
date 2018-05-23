@@ -21,7 +21,7 @@
     "test": "echo \"no test specified\" && exit 0",
     "watch": "watch \"yarn run build\" src",
     "build": "yarn run build:scss & yarn run build:js",
-    "build:scss": "node-sass --output-style compressed -o dist src/style.scss",
+    "build:scss": "node-sass --output-style compressed -o dist src/applause-button.scss",
     "build:js": "rollup -c",
     "prepublish": "yarn run build",
     "travis-deploy-once": "travis-deploy-once",
