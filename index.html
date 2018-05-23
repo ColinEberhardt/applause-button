@@ -75,8 +75,8 @@ https://unpkg.com/applause-button/dist/applause-button.css</code></pre>
         </div>
 
         <div class="step">
-            <h2>2. Add to your website</h2>
-            <p>Include the Applause button JavaScript and stylesheet and place the `applause-button` somewhere in the page,
+          <h2>2. Add to your website</h2>
+          <p>Include the Applause button JavaScript and stylesheet in your page, then add the <code>applause-button</code> element,
             and you're good to go!</p>
 <pre><code class="html">&lt;head&gt;
   &lt;!-- add the button style & script --&gt;
@@ -89,7 +89,19 @@ https://unpkg.com/applause-button/dist/applause-button.css</code></pre>
 &lt;/body&gt;  
 </code></pre>
           <p>The applause button automatically persists the number of 'claps' given on a page, using a simple cloud-hosted endpoint.</p>
+          <p>You can see the button in action on the <a href="http://blog.scottlogic.com/">Scott Logic blog</a>.</p>
         </div>
+
+        <div class="step">
+          <h2>3. Styling and configuration</h2>
+          <p>A few tips for styling and configuration</p>
+          <ul>
+            <li>The button scales to fit, just make sure it is square.</li>
+            <li>You can change the color of the button via its <code>color</code> attribute, e.g.
+              <code>&lt;applause-button color="red" /&gt;</code>, or for more flexibility, just apply CSS.</li>
+            <li>By default, users can only clap once. If you'd like them to be able to add multiple
+              'claps', set the <code>multiclap</code> attribute to <code>true</code>.</li>
+          </ul>
 
       </div>
     </div>
