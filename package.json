@@ -1,0 +1,14 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ColinEberhardt/applause-button.git",
+  "author": "Colin Eberhardt <colin.eberhardt@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "node-sass": "^4.9.0"
+  },
+  "scripts": {
+    "style:watch": "node-sass -w style.scss style.css"
+  }
+}

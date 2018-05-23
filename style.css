@@ -1,0 +1,50 @@
+body {
+  font-family: "Lato", sans-serif; }
+
+a {
+  color: #11807f; }
+
+.hero {
+  margin-top: 160px; }
+  .hero applause-button {
+    width: 150px;
+    height: 150px;
+    font-size: 35px;
+    margin-bottom: 40px; }
+    .hero applause-button .style-root:after {
+      border-width: 2px; }
+    .hero applause-button .count {
+      color: #11807f; }
+  .hero h1 {
+    display: none; }
+  .hero .title {
+    width: 50%;
+    margin-bottom: 20px; }
+  .hero .subtitle {
+    margin-bottom: 20px;
+    font-size: 20px; }
+  .hero .github p {
+    font-size: 14px; }
+  .hero .github svg {
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+    display: block; }
+  .hero .github td {
+    vertical-align: top; }
+
+pre {
+  padding: 10px;
+  background-color: #eff6f7;
+  margin: 20px 0; }
+
+code {
+  background-color: #eff6f7 !important; }
+
+.step {
+  margin-top: 80px;
+  text-align: left; }
+  .step h2 {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 20px; }

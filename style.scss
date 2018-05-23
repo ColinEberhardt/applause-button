@@ -1,0 +1,85 @@
+$unit-xs: 10px;
+$unit-sm: 20px;
+$unit-md: 30px;
+$unit-mid: 40px;
+$unit-lg: 80px;
+$unit-xl: 160px;
+
+body {
+  font-family: "Lato", sans-serif;
+}
+
+a {
+  color: #11807f;
+}
+
+// .content {
+//   background-color: lightgray;
+// }
+
+.hero {
+  margin-top: $unit-xl;
+
+  applause-button {
+    width: 150px;
+    height: 150px;
+    font-size: 35px;
+    margin-bottom: $unit-mid;
+
+    .style-root:after {
+      border-width: 2px;
+    }
+
+    .count {
+      color: #11807f;
+    }
+  }
+  h1 {
+    display: none;
+  }
+
+  .title {
+    width: 50%;
+    margin-bottom: $unit-sm;
+  }
+
+  .subtitle {
+    margin-bottom: $unit-sm;
+    font-size: 20px;
+  }
+
+  .github {
+    p {
+      font-size: 14px;
+    }
+    svg {
+      margin-right: $unit-xs;
+      width: $unit-mid;
+      height: $unit-mid;
+      display: block;
+    }
+    td {
+      vertical-align: top;
+    }
+  }
+}
+
+pre {
+  padding: $unit-xs;
+  background-color: #eff6f7;
+  margin: $unit-sm 0;
+}
+
+code {
+  background-color: #eff6f7 !important;
+}
+
+.step {
+  margin-top: $unit-lg;
+  text-align: left;
+  h2 {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: $unit-sm;
+  }
+}
