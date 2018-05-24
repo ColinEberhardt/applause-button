@@ -72,6 +72,7 @@ pre {
 
 code {
   background-color: #eff6f7 !important;
+  overflow: scroll;
 }
 
 .step {
@@ -82,4 +83,8 @@ code {
     text-align: center;
     margin-bottom: $unit-sm;
   }
+}
+
+.step.img {
+  width: 100%;
 }
