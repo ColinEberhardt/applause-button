@@ -39,7 +39,8 @@ pre {
   margin: 20px 0; }
 
 code {
-  background-color: #eff6f7 !important; }
+  background-color: #eff6f7 !important;
+  overflow: scroll; }
 
 .step {
   margin-top: 80px;
@@ -48,3 +49,19 @@ code {
     font-size: 20px;
     text-align: center;
     margin-bottom: 20px; }
+
+img.step {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto; }
+
+@media (max-width: 500px) {
+  pre {
+    font-size: 60%;
+    padding: 5px; } }
+
+@media (max-width: 300px) {
+  pre {
+    font-size: 50%;
+    padding: 2px; } }

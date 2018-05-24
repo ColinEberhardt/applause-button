@@ -85,6 +85,23 @@ code {
   }
 }
 
-.step.img {
-  width: 100%;
+img.step {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 500px) {
+  pre {
+    font-size: 60%;
+    padding: 5px;
+  }
+}
+
+@media (max-width: 300px) {
+  pre {
+    font-size: 50%;
+    padding: 2px;
+  }
 }
