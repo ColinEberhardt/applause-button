@@ -9,7 +9,7 @@ The applause button is a custom element that can be added directly to the page. 
 ```html
 <head>
   <!-- add the button style & script -->
-  <link rel="stylesheet" href="dist/style.css" />
+  <link rel="stylesheet" href="dist/applause-button.css" />
   <script src="dist/applause-button.js"></script>
 </head>
 <body>

@@ -2,17 +2,17 @@ import "document-register-element/build/document-register-element";
 
 const API = "https://api.applause-button.com";
 
-const getClaps = () =>
+const getClaps = url =>
   // TODO: polyfill for IE (not edge)
-  fetch(`${API}/get-claps`, {
+  fetch(`${API}/get-claps` + (url ? `?url=${url}` : ""), {
     headers: {
       "Content-Type": "text/plain"
     }
   }).then(response => response.text());
 
-const updateClaps = claps =>
+const updateClaps = (claps, url) =>
   // TODO: polyfill for IE (not edge)
-  fetch(`${API}/update-claps`, {
+  fetch(`${API}/update-claps` + (url ? `?url=${url}` : ""), {
     method: "POST",
     headers: {
       "Content-Type": "text/plain"
@@ -99,7 +99,7 @@ class ApplauseButton extends HTMLCustomElement {
           this._bufferedClaps,
           MAX_MULTI_CLAP - this._totalClaps
         );
-        updateClaps(increment);
+        updateClaps(increment, this.url);
         this._totalClaps += increment;
         this._bufferedClaps = 0;
       }
@@ -132,7 +132,7 @@ class ApplauseButton extends HTMLCustomElement {
       }
     });
 
-    getClaps().then(claps => {
+    getClaps(this.url).then(claps => {
       this.classList.remove("loading");
       const clapCount = Number(claps);
       if (clapCount > 0) {
@@ -154,6 +154,19 @@ class ApplauseButton extends HTMLCustomElement {
       this.removeAttribute("color");
     }
     this._updateRootColor();
+  }
+
+  set url(url) {
+    if (url) {
+      this.setAttribute("url", url);
+    } else {
+      this.removeAttribute("url");
+    }
+    this._updateRootColor();
+  }
+
+  get url() {
+    return this.getAttribute("url");
   }
 
   get multiclap() {
