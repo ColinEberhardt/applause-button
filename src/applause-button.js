@@ -22,6 +22,8 @@ const updateClaps = (claps, url) =>
 
 const arrayOfSize = size => new Array(size).fill(undefined);
 
+const formatClaps = claps => claps.toLocaleString("en");
+
 // toggle a CSS class to re-trigger animations
 const toggleClass = (element, cls) => {
   element.classList.remove(cls);
@@ -120,7 +122,9 @@ class ApplauseButton extends HTMLCustomElement {
       this._updateClaps();
 
       setTimeout(() => {
-        this._countElement.innerHTML = Number(this._countElement.innerHTML) + 1;
+        this._countElement.innerHTML = formatClaps(
+          Number(this._countElement.innerHTML) + 1
+        );
       }, 250);
 
       if (this.multiclap) {
@@ -136,7 +140,7 @@ class ApplauseButton extends HTMLCustomElement {
       this.classList.remove("loading");
       const clapCount = Number(claps);
       if (clapCount > 0) {
-        this._countElement.innerHTML = Number(claps);
+        this._countElement.innerHTML = formatClaps(Number(claps));
       }
     });
 
