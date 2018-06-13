@@ -103,6 +103,9 @@ https://unpkg.com/applause-button/dist/applause-button.css</code></pre>
               <code>&lt;applause-button color="red" /&gt;</code>, or for more flexibility, just apply CSS.</li>
             <li>By default, users can only clap once. If you'd like them to be able to add multiple
               'claps', set the <code>multiclap</code> attribute to <code>true</code>.</li>
+            <li>The applause button determines the URL that it should log a 'clap' for based on the HTTP referrer.
+              If you have multiple URLs that serve the same content, you can specify the URL explicitly via the
+              <code>url</code> attribute</code>, e.g. <code>&lt;applause-button url="google.com" /&gt;</code></li>
           </ul>
 
       </div>
