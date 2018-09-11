@@ -123,7 +123,7 @@ class ApplauseButton extends HTMLCustomElement {
 
       setTimeout(() => {
         this._countElement.innerHTML = formatClaps(
-          Number(this._countElement.innerHTML) + 1
+          Number(this._countElement.innerHTML.replace(",", "")) + 1
         );
       }, 250);
 
