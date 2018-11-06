@@ -10,17 +10,6 @@ const getClaps = url =>
     }
   }).then(response => response.text());
 
-
-const WAVELENGTH = 60 * 5;
-const secondsForClap = a => (WAVELENGTH * Math.asin(a / 10)) / (Math.PI * 2);
-
-const computeRequest = clapCount => {
-  const requiredSeconds = secondsForClap(clapCount);
-  const serverSeconds = (Date.now() / 1000) % 60;
-  const delta = requiredSeconds - serverSeconds;
-  return delta;
-}
-
 const updateClaps = (claps, url) =>
   // TODO: polyfill for IE (not edge)
   fetch(`${API}/update-claps` + (url ? `?url=${url}` : ""), {
@@ -28,7 +17,7 @@ const updateClaps = (claps, url) =>
     headers: {
       "Content-Type": "text/plain"
     },
-    body: JSON.stringify(computeRequest(claps))
+    body: JSON.stringify(claps)
   }).then(response => response.text());
 
 const arrayOfSize = size => new Array(size).fill(undefined);
