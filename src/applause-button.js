@@ -1,5 +1,6 @@
 import "document-register-element/build/document-register-element";
 
+const VERSION = "3.0.0";
 const API = "https://api.applause-button.com";
 
 const getClaps = url =>
@@ -17,7 +18,7 @@ const updateClaps = (claps, url) =>
     headers: {
       "Content-Type": "text/plain"
     },
-    body: JSON.stringify(claps)
+    body: JSON.stringify(`${claps},${VERSION}`)
   }).then(response => response.text());
 
 const arrayOfSize = size => new Array(size).fill(undefined);
