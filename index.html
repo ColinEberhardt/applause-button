@@ -107,12 +107,62 @@ https://unpkg.com/applause-button/dist/applause-button.css</code></pre>
               If you have multiple URLs that serve the same content, you can specify the URL explicitly via the
               <code>url</code> attribute</code>, e.g. <code>&lt;applause-button url="google.com" /&gt;</code></li>
           </ul>
+        </div>
 
-      </div>
-    </div>
-  </div>
+        <div class="step">
+          <h2>4. Donate!</h2>
+          <p>The applause button is backed by a lightweight serverless architecture giving it a relatively low running cost, however
+            it does serve around 100,000 requests each day, and this doesn't come for free! The following table shows the top ten 
+            websites that use applause button and the monthly cost of supporting each.
+          </p>
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">Consumer</th>
+              <th scope="col">Monthly Cost</th>
+            </tr>
+            </thead>
+            <tbody id="attribution-table">
+            </tbody>
+          </table>
+        </div>
 
-  
+        <div class="step">
+          <h2>5. Developer API</h2>
+          <p>The applause button is primarily designed to be consumed via the visual component. However, you are welcome to access the
+            APIs that support it, as long as you don't do anything silly!</p>
+          <p>Here's a brief overview of the API methods, all of which are available via <code>https://api.applause-button.com</code></p>
+          <b>GET - /get-claps</b>
+          <p>Gets the number of claps for a page based on the HTTP Referer header. You can also provide the url via the
+            querystring, however a Referer must still be set (this avoids requests from robots etc ...)</p>
+<pre><code class="bash">$ curl -e robot https://api.applause-button.com/get-claps?url=applause-button.com/
+7963
+</code></pre>
+          <b>POST - /get-multiple</b>
+          <p>Gets the number of claps for multiple pages in a single request, this is the preferred option for retrieving multiple clap
+            counts. The clap counts for up to 100 URLs can be requested as a JSON array, with the results returned in JSON.
+<pre><code class="bash">$ curl 'https://api.applause-button.com/get-multiple' \
+  -H 'Content-Type: text/plain' --data-binary \
+'["applause-button.com/", "blog.scottlogic.com/2018/10/19/living-in-an-accessible-world.html"]'
+[{"claps":7200,"url":"applause-button.com/"},{"claps":138,"url":"blog.scottlogic.com/2018/10/19/living-in-an-accessible-world.html"}]
+</code></pre>
+        </div>
+
+      </div> <!-- offset -->
+    </div> <!-- row -->
+  </div> <!-- container --> 
+
+  <script type="text/javascript">
+    fetch('https://rkqvakocg4.execute-api.us-east-1.amazonaws.com/dev/get-cost-attribution')
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (consumers) {
+        document.getElementById("attribution-table").innerHTML =
+          consumers.reduce((prev, curr) =>
+            prev + "<tr><td>" + curr.consumer + "</td><td>$" + (curr.cost * 30).toFixed(2) + "</td></tr>", "");
+      });      
+  </script>
 </body>
 
 </html>
