@@ -100,7 +100,9 @@ class ApplauseButton extends HTMLCustomElement {
     this._totalClaps = 0;
 
     let initialClapCountResolve;
-    this._initialClapCount = new Promise(resolve => (initialClapCountResolve = resolve));
+    this._initialClapCount = new Promise(
+      resolve => (initialClapCountResolve = resolve)
+    );
 
     // buffer claps within a 2 second window
     this._bufferedClaps = 0;
@@ -126,17 +128,31 @@ class ApplauseButton extends HTMLCustomElement {
         return;
       }
 
+      // fire a DOM event with the updated count
+      const clapCount =
+        Number(this._countElement.innerHTML.replace(",", "")) + 1;
+      this.dispatchEvent(
+        new CustomEvent("clapped", {
+          bubbles: true,
+          detail: {
+            clapCount
+          }
+        })
+      );
+
+      // trigger the animation
       toggleClass(this, "clap");
+
+      // buffer the increased count and defer the update
       this._bufferedClaps++;
       this._updateClaps();
 
       // increment the clap count after a small pause (to allow the animation to run)
       setTimeout(() => {
-        this._countElement.innerHTML = formatClaps(
-          Number(this._countElement.innerHTML.replace(",", "")) + 1
-        );
+        this._countElement.innerHTML = formatClaps(clapCount);
       }, 250);
 
+      // check whether we've exceeded the max claps
       if (this.multiclap) {
         if (this._bufferedClaps + this._totalClaps >= MAX_MULTI_CLAP) {
           this.classList.add("clap-limit-exceeded");

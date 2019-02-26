@@ -13,11 +13,17 @@
   </style>
 </head>
 <body>
-  <applause-button id="applause" multiclap="true" url="applause-button.com/"/>
+  <applause-button id="applause" multiclap="true" url="google.com"/>
   <script type="text/javascript">
+
     const button = document.getElementById("applause");
+
     button.initialClapCount.then(function(count) {
       console.log("initial clap count", count);
+    });
+
+    button.addEventListener("clapped", function(event) {
+      console.log("button clapped", event.detail);
     });
   </script>
 </body>
