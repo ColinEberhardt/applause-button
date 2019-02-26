@@ -95,8 +95,14 @@ class ApplauseButton extends HTMLCustomElement {
     this._styleRootElement = this.querySelector(".style-root");
     this._countElement = this.querySelector(".count");
     this._updateRootColor();
+    // the number of claps that this user has made - this is limited
+    // by the MAX_MULTI_CLAP property, and whether multiclap is enabled
     this._totalClaps = 0;
 
+    let initialClapCountResolve;
+    this._initialClapCount = new Promise(resolve => (initialClapCountResolve = resolve));
+
+    // buffer claps within a 2 second window
     this._bufferedClaps = 0;
     this._updateClaps = debounce(() => {
       if (this._totalClaps < MAX_MULTI_CLAP) {
@@ -124,6 +130,7 @@ class ApplauseButton extends HTMLCustomElement {
       this._bufferedClaps++;
       this._updateClaps();
 
+      // increment the clap count after a small pause (to allow the animation to run)
       setTimeout(() => {
         this._countElement.innerHTML = formatClaps(
           Number(this._countElement.innerHTML.replace(",", "")) + 1
@@ -142,12 +149,17 @@ class ApplauseButton extends HTMLCustomElement {
     getClaps(this.url).then(claps => {
       this.classList.remove("loading");
       const clapCount = Number(claps);
+      initialClapCountResolve(clapCount);
       if (clapCount > 0) {
         this._countElement.innerHTML = formatClaps(clapCount);
       }
     });
 
     this._connected = true;
+  }
+
+  get initialClapCount() {
+    return this._initialClapCount;
   }
 
   get color() {
@@ -196,6 +208,8 @@ class ApplauseButton extends HTMLCustomElement {
     this._updateRootColor();
   }
 
+  // propagates the color property to the various elements
+  // that make up the applause button
   _updateRootColor() {
     if (!this._styleRootElement) {
       return;
