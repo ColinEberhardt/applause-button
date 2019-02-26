@@ -22,6 +22,7 @@
 
 applause-button {
   position: relative;
+  cursor:pointer;
 
   .style-root {
     @include position-fill();
