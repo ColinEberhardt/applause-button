@@ -13,8 +13,8 @@
     crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
 
-  <script src="https://unpkg.com/applause-button/dist/applause-button.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/applause-button/dist/applause-button.css">
+  <script src="https://unpkg.com/applause-button@3.2.0/dist/applause-button.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/applause-button@3.2.0/dist/applause-button.css">
 
   <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
@@ -28,7 +28,7 @@
       <div class="offset-md-1 col-md-10 offset-lg-2 col-lg-8 col-sm-12 content" align="center">
 
         <div class="hero">
-          <applause-button color="#11807f" multiclap="true"></applause-button>
+          <applause-button id="applause" color="#11807f" multiclap="true"></applause-button>
           <h1>Applause</h1>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 335 50" class="title">
             <defs>
@@ -106,6 +106,10 @@ https://unpkg.com/applause-button/dist/applause-button.css</code></pre>
             <li>The applause button determines the URL that it should log a 'clap' for based on the HTTP referrer.
               If you have multiple URLs that serve the same content, you can specify the URL explicitly via the
               <code>url</code> attribute</code>, e.g. <code>&lt;applause-button url="google.com" /&gt;</code></li>
+            <li>If you want to programmatically access the clap count, the button exposes a <code>initialClapCount</code> property, which
+            returns a Promise which resolves to the initial count (see the source of this page for an example).</li>
+            <li>If you want to programmatically determine when claps occur, the button fires a <code>clapped</code> event
+              (again, see the source of this page for an example).</li>
           </ul>
         </div>
 
@@ -114,18 +118,6 @@ https://unpkg.com/applause-button/dist/applause-button.css</code></pre>
           <p>The applause button is backed by a lightweight serverless architecture giving it a relatively low running cost, however
             it does serve around 100,000 requests each day, and this doesn't come for free! Please consider donating towards
             these running costs (approx $50 per month) via the <a href="https://opencollective.com/applause-button">open collective website</a>.</p>
-          <!-- <p>The following table shows the top ten websites that use applause button and the monthly cost of supporting each.</p>
-          <table class="table">
-            <thead>
-            <tr>
-              <th scope="col">Consumer</th>
-              <th scope="col">Monthly Cost</th>
-            </tr>
-            </thead>
-            <tbody id="attribution-table">
-            </tbody>
-          </table> 
-          <p>Back this project via the <a href="https://opencollective.com/applause-button">open collective website</a>.</p>-->
           <script src="https://opencollective.com/applause-button/banner.js"></script>
         </div>
 
@@ -155,15 +147,15 @@ https://unpkg.com/applause-button/dist/applause-button.css</code></pre>
   </div> <!-- container --> 
 
   <script type="text/javascript">
-    // fetch('https://rkqvakocg4.execute-api.us-east-1.amazonaws.com/dev/get-cost-attribution')
-    //   .then(function (response) {
-    //     return response.json();
-    //   })
-    //   .then(function (consumers) {
-    //     document.getElementById("attribution-table").innerHTML =
-    //       consumers.reduce((prev, curr) =>
-    //         prev + "<tr><td>" + curr.consumer + "</td><td>$" + (curr.cost * 30).toFixed(2) + "</td></tr>", "");
-    //   });      
+    const button = document.getElementById("applause");
+
+    button.initialClapCount.then(function (count) {
+      console.log("initial clap count", count);
+    });
+
+    button.addEventListener("clapped", function (event) {
+      console.log("button clapped", event.detail);
+    });     
   </script>
 </body>
 
