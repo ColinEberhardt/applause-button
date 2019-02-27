@@ -1,19 +1,19 @@
 import "document-register-element/build/document-register-element";
 
-const VERSION = "3.0.0";
+const VERSION = "3.3.0";
 const API = "https://api.applause-button.com";
 
-const getClaps = url =>
+const getClaps = (api, url) =>
   // TODO: polyfill for IE (not edge)
-  fetch(`${API}/get-claps` + (url ? `?url=${url}` : ""), {
+  fetch(`${api}/get-claps` + (url ? `?url=${url}` : ""), {
     headers: {
       "Content-Type": "text/plain"
     }
   }).then(response => response.text());
 
-const updateClaps = (claps, url) =>
+const updateClaps = (api, claps, url) =>
   // TODO: polyfill for IE (not edge)
-  fetch(`${API}/update-claps` + (url ? `?url=${url}` : ""), {
+  fetch(`${api}/update-claps` + (url ? `?url=${url}` : ""), {
     method: "POST",
     headers: {
       "Content-Type": "text/plain"
@@ -112,7 +112,7 @@ class ApplauseButton extends HTMLCustomElement {
           this._bufferedClaps,
           MAX_MULTI_CLAP - this._totalClaps
         );
-        updateClaps(increment, this.url);
+        updateClaps(this.api, increment, this.url);
         this._totalClaps += increment;
         this._bufferedClaps = 0;
       }
@@ -162,7 +162,7 @@ class ApplauseButton extends HTMLCustomElement {
       }
     });
 
-    getClaps(this.url).then(claps => {
+    getClaps(this.api, this.url).then(claps => {
       this.classList.remove("loading");
       const clapCount = Number(claps);
       initialClapCountResolve(clapCount);
@@ -180,6 +180,18 @@ class ApplauseButton extends HTMLCustomElement {
 
   get color() {
     return this.getAttribute("color");
+  }
+
+  set api(api) {
+    if (api) {
+      this.setAttribute("api", api);
+    } else {
+      this.removeAttribute("api");
+    }
+  }
+
+  get api() {
+    return this.getAttribute("api") || API;
   }
 
   set color(color) {
