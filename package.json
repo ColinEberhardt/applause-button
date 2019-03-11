@@ -8,19 +8,30 @@
     "babel-core": "^6.26.3",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.1",
+    "http-server": "^0.11.1",
+    "jest": "^24.1.0",
+    "jest-puppeteer": "^4.0.0",
     "node-sass": "^4.9.0",
+    "opencollective-postinstall": "^2.0.2",
+    "opencollective": "^1.0.3",
+    "prettier": "^1.16.4",
+    "prettier-check": "^2.0.0",
+    "puppeteer": "^1.13.0",
     "rollup": "^0.58.2",
     "rollup-plugin-babel": "^3.0.4",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-uglify": "^3.0.0",
-    "watch": "^1.0.2",
+    "semantic-release": "^15.4.1",
     "travis-deploy-once": "^5.0.0",
-    "semantic-release": "^15.4.1"
+    "watch": "^1.0.2"
   },
   "scripts": {
-    "test": "echo \"no test specified\" && exit 0",
+    "test": "yarn run test:prettier && yarn run test:jest",
+    "test:jest": "yarn run build && jest",
+    "test:prettier": "prettier-check src/**/*.js",
+    "test:server": "http-server -p 8081",
     "watch": "watch \"yarn run build\" src",
-    "build": "yarn run build:scss & yarn run build:js",
+    "build": "yarn run build:scss && yarn run build:js",
     "build:scss": "node-sass --output-style compressed -o dist src/applause-button.scss",
     "build:js": "rollup -c",
     "prepublish": "yarn run build",
@@ -29,9 +40,7 @@
     "postinstall": "opencollective-postinstall"
   },
   "dependencies": {
-    "document-register-element": "^1.8.1",
-    "opencollective-postinstall": "^2.0.2",
-    "opencollective": "^1.0.3"
+    "document-register-element": "^1.8.1"
   },
   "repository": {
     "type": "git",
@@ -40,5 +49,8 @@
   "collective": {
     "type": "opencollective",
     "url": "https://opencollective.com/applause-button"
+  },
+  "jest": {
+    "preset": "jest-puppeteer"
   }
 }
