@@ -119,7 +119,21 @@ https://unpkg.com/applause-button/dist/applause-button.css</code></pre>
         <div class="step">
           <h2>4. Donate!</h2>
           <p>The applause button is backed by a lightweight serverless architecture giving it a relatively low running cost, however
-            it does serve around 100,000 requests each day, and this doesn't come for free! Please consider donating towards
+            it does serve around 100,000 requests each day, and this doesn't come for free!</p>
+
+          <p>The following table shows the top ten websites that use applause button and the monthly cost of supporting each.</p>
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">Consumer</th>
+              <th scope="col">Monthly Cost</th>
+            </tr>
+            </thead>
+            <tbody id="attribution-table">
+            </tbody>
+          </table> 
+                                
+           <p>Please consider donating towards
             these running costs (approx $50 per month) via the <a href="https://opencollective.com/applause-button">open collective website</a>.</p>
           <script src="https://opencollective.com/applause-button/banner.js"></script>
         </div>
@@ -150,6 +164,16 @@ https://unpkg.com/applause-button/dist/applause-button.css</code></pre>
   </div> <!-- container --> 
 
   <script type="text/javascript">
+    fetch('https://rkqvakocg4.execute-api.us-east-1.amazonaws.com/dev/get-cost-attribution')
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (consumers) {
+        document.getElementById("attribution-table").innerHTML =
+          consumers.reduce((prev, curr) =>
+            prev + "<tr><td>" + curr.consumer + "</td><td>$" + (curr.cost * 30).toFixed(2) + "</td></tr>", "");
+      });      
+
     const button = document.getElementById("applause");
 
     button.initialClapCount.then(function (count) {
