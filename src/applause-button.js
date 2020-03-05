@@ -28,12 +28,11 @@ const formatClaps = claps => claps.toLocaleString("en");
 // toggle a CSS class to re-trigger animations
 const toggleClass = (element, cls) => {
   element.classList.remove(cls);
-  setTimeout(() => {
-    element.classList.add(cls);
-  }, 100);
-  setTimeout(() => {
-    element.classList.remove(cls);
-  }, 1000);
+
+  // Force layout reflow
+  void element.offsetWidth;
+
+  element.classList.add(cls);
 };
 
 const debounce = (fn, delay) => {
