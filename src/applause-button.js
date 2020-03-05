@@ -28,17 +28,16 @@ const formatClaps = claps => claps.toLocaleString("en");
 // toggle a CSS class to re-trigger animations
 const toggleClass = (element, cls) => {
   element.classList.remove(cls);
-  setTimeout(() => {
-    element.classList.add(cls);
-  }, 100);
-  setTimeout(() => {
-    element.classList.remove(cls);
-  }, 1000);
+
+  // Force layout reflow
+  void element.offsetWidth;
+
+  element.classList.add(cls);
 };
 
 const debounce = (fn, delay) => {
   var timer = null;
-  return function() {
+  return function () {
     var context = this,
       args = arguments;
     clearTimeout(timer);
@@ -51,7 +50,7 @@ class HTMLCustomElement extends HTMLElement {
   constructor(_) {
     return (_ = super(_)).init(), _;
   }
-  init() {}
+  init() { }
 }
 
 const MAX_MULTI_CLAP = 10;
@@ -85,8 +84,8 @@ class ApplauseButton extends HTMLCustomElement {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -10 20 20">
           <g class="sparkle">
           ${arrayOfSize(5)
-            .map(s => `<g><circle cx="0" cy="0" r="1"/></g>`)
-            .join("")}
+        .map(s => `<g><circle cx="0" cy="0" r="1"/></g>`)
+        .join("")}
           </g>
         </svg>
       </div>
