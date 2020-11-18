@@ -19,7 +19,7 @@
     "rollup-plugin-babel": "^3.0.4",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-uglify": "^3.0.0",
-    "semantic-release": "^15.4.1",
+    "semantic-release": "^17.2.3",
     "travis-deploy-once": "^5.0.0",
     "watch": "^1.0.2"
   },
