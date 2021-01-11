@@ -9,7 +9,9 @@ const getClaps = (api, url) =>
     headers: {
       "Content-Type": "text/plain"
     }
-  }).then(response => response.text());
+  })
+    .then(response => response.text())
+    .then(res => Number(res));
 
 const updateClaps = (api, claps, url) =>
   // TODO: polyfill for IE (not edge)
@@ -19,7 +21,9 @@ const updateClaps = (api, claps, url) =>
       "Content-Type": "text/plain"
     },
     body: JSON.stringify(`${claps},${VERSION}`)
-  }).then(response => response.text());
+  })
+    .then(response => response.text())
+    .then(res => Number(res));
 
 const arrayOfSize = size => new Array(size).fill(undefined);
 
@@ -98,10 +102,16 @@ class ApplauseButton extends HTMLCustomElement {
     // by the MAX_MULTI_CLAP property, and whether multiclap is enabled
     this._totalClaps = 0;
 
+    // return the initial clap count as a promise
     let initialClapCountResolve;
     this._initialClapCount = new Promise(
       resolve => (initialClapCountResolve = resolve)
     );
+
+    // cache the most recent clap count returned from the server. If, after an update, the clap count
+    // is unchanged, either the maximum clap count has been exceeded. Or, the server-side imposed
+    // clap limit for this IP address has been exceeded.
+    this._cachedClapCount = 0;
 
     // buffer claps within a 2 second window
     this._bufferedClaps = 0;
@@ -111,9 +121,20 @@ class ApplauseButton extends HTMLCustomElement {
           this._bufferedClaps,
           MAX_MULTI_CLAP - this._totalClaps
         );
-        updateClaps(this.api, increment, this.url);
-        this._totalClaps += increment;
-        this._bufferedClaps = 0;
+        // send the updated clap count - checking the response to see if the server-held
+        // clap count has actually incremented
+        updateClaps(this.api, increment, this.url).then(updatedClapCount => {
+          if (updatedClapCount === this._cachedClapCount) {
+            // if the clap number as not incremented, disable further updates
+            this.classList.add("clap-limit-exceeded");
+            // and reset the counter
+            this._countElement.innerHTML = formatClaps(updatedClapCount);
+          }
+          this._cachedClapCount = updatedClapCount;
+
+          this._totalClaps += increment;
+          this._bufferedClaps = 0;
+        });
       }
     }, 2000);
 
@@ -161,9 +182,9 @@ class ApplauseButton extends HTMLCustomElement {
       }
     });
 
-    getClaps(this.api, this.url).then(claps => {
+    getClaps(this.api, this.url).then(clapCount => {
       this.classList.remove("loading");
-      const clapCount = Number(claps);
+      this._cachedClapCount = clapCount;
       initialClapCountResolve(clapCount);
       if (clapCount > 0) {
         this._countElement.innerHTML = formatClaps(clapCount);
