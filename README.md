@@ -24,6 +24,35 @@ The above will render an applause button, persisting claps and clap counts.
 
 For more information, visit the [project website](https://colineberhardt.github.io/applause-button/);
 
+## Development
+
+Clone this repo and install dependencies via yarn:
+
+~~~
+$ yarn
+~~~
+
+Use `yarn test` to run the test suite. These use Jest as the test runner, and Puppeteer as a headless Chrome instance, allowing the applause button to make API requests (with appropriate responses faked within the test code).
+
+You can build project and start watching the `src` folder for changes as follows:
+
+~~~
+$ yarn run watch
+~~~
+
+Run `yarn test:server` to start a dev server in another process. 
+
+
+
+
+
+
+
+### Releases
+
+All releases are created automatically via [semantic release](https://github.com/semantic-release/semantic-release) running on Travis.
+
+
 ## Contributors
 
 This project exists thanks to all the people who contribute. 

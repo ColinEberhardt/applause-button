@@ -22,7 +22,7 @@
 
 applause-button {
   position: relative;
-  cursor:pointer;
+  cursor: pointer;
 
   .style-root {
     @include position-fill();
@@ -63,6 +63,16 @@ applause-button {
     g.outline {
       visibility: visible;
     }
+  }
+
+  &.clap-limit-exceeded {
+    cursor: inherit;
+    div {
+      fill: gray !important;
+      stroke: gray !important;
+      color: gray !important;
+    }
+
   }
 
   &.clapped {
