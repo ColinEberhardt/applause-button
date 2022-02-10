@@ -11,7 +11,7 @@
     "http-server": "^0.11.1",
     "jest": "^24.1.0",
     "jest-puppeteer": "^4.0.0",
-    "node-sass": "^4.9.0",
+    "node-sass": "^7.0.0",
     "prettier": "^1.16.4",
     "prettier-check": "^2.0.0",
     "puppeteer": "^1.13.0",
