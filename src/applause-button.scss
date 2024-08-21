@@ -22,8 +22,6 @@
 
 applause-button {
   position: relative;
-  cursor: pointer;
-
   .style-root {
     @include position-fill();
 
@@ -33,6 +31,7 @@ applause-button {
       display: block;
       border-radius: 50%;
       border: 1px solid;
+      z-index: -1;
     }
     &:hover:after:not(.clap-limit-exceeded) {
       border-color: inherit;
@@ -43,15 +42,37 @@ applause-button {
     opacity: 0.5;
   }
 
-  .shockwave {
+  .applaud-button {
     @include position-fill();
+    cursor: pointer;
+    display: block;
     border-radius: 50%;
+    border-color: inherit;
+    border: 1px solid;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+    outline: none;
+    &:focus, &:hover {
+      box-shadow: 0 0 10px;
+      opacity: 1;
+    }
+  }
+
+  &:not(.clapped) .applaud-button:focus, &:not(.clapped) .applaud-button:hover {
+    animation-name: shockwave;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in;
   }
 
   svg {
     @include centered-square(60%);
     @include position-fill();
     opacity: 0.8;
+    z-index: -1;
     stroke: none;
     // annoyingly bootstrap has a higher precedence rule that sets overflow to hidden
     // hence the bang-important
@@ -110,15 +131,6 @@ applause-button {
       g:nth-child(#{$i + 1}) {
         transform: rotate($degrees * $i) translateX(10px);
       }
-    }
-  }
-
-  &:hover:not(.clapped) {
-    .shockwave {
-      animation-name: shockwave;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-      animation-timing-function: ease-in;
     }
   }
 
