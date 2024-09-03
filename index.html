@@ -1,6 +1,7 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+  <title>Clapper test page</title>
   <link rel="stylesheet" href="dist/applause-button.css" />
   <script src="dist/applause-button.js"></script>
   <style>
@@ -13,9 +14,8 @@
   </style>
 </head>
 <body>
-  <applause-button id="applause" multiclap="true" url="google.com"/>
+  <applause-button id="applause" multiclap="true" url="google.com"></applause-button>
   <script type="text/javascript">
-
     const button = document.getElementById("applause");
 
     button.initialClapCount.then(function(count) {

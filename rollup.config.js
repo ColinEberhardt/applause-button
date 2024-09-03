@@ -1,6 +1,6 @@
-import babel from "rollup-plugin-babel";
-import uglify from "rollup-plugin-uglify";
-import resolve from "rollup-plugin-node-resolve";
+import babel from "@rollup/plugin-babel";
+import resolve from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
 
 export default {
   input: "src/applause-button.js",
@@ -9,18 +9,15 @@ export default {
     babel({
       presets: [
         [
-          "env",
-          {
-            modules: false
-          }
+          "@babel/preset-env"
         ]
       ],
-      plugins: ["external-helpers"]
+      babelHelpers: "bundled",
     }),
-    uglify()
+    terser(),
   ],
   output: {
     file: "dist/applause-button.js",
-    format: "umd"
-  }
+    format: "umd",
+  },
 };

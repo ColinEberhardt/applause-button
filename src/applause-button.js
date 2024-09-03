@@ -1,33 +1,27 @@
-import "document-register-element/build/document-register-element";
+import "@ungap/custom-elements";
 
 const VERSION = "3.3.0";
 const API = "https://api.applause-button.com";
 
 const getClaps = (api, url) =>
-  // TODO: polyfill for IE (not edge)
-  fetch(`${api}/get-claps` + (url ? `?url=${url}` : ""), {
-    headers: {
-      "Content-Type": "text/plain"
-    }
-  })
-    .then(response => response.text())
-    .then(res => Number(res));
+  fetch(`${api}/get-claps` + (url ? `?url=${url}` : ""))
+    .then((response) => response.text())
+    .then((res) => Number(res));
 
 const updateClaps = (api, claps, url) =>
-  // TODO: polyfill for IE (not edge)
   fetch(`${api}/update-claps` + (url ? `?url=${url}` : ""), {
     method: "POST",
     headers: {
-      "Content-Type": "text/plain"
+      "Content-Type": "text/plain", //avoids preflight request
     },
-    body: JSON.stringify(`${claps},${VERSION}`)
+    body: JSON.stringify(`${claps},${VERSION}`),
   })
-    .then(response => response.text())
-    .then(res => Number(res));
+    .then((response) => response.text())
+    .then((res) => Number(res));
 
-const arrayOfSize = size => new Array(size).fill(undefined);
+const arrayOfSize = (size) => new Array(size).fill(undefined);
 
-const formatClaps = claps => claps.toLocaleString("en");
+const formatClaps = (claps) => claps.toLocaleString("en");
 
 // toggle a CSS class to re-trigger animations
 const toggleClass = (element, cls) => {
@@ -40,26 +34,18 @@ const toggleClass = (element, cls) => {
 };
 
 const debounce = (fn, delay) => {
-  var timer = null;
-  return function() {
-    var context = this,
+  let timer = null;
+  return function () {
+    const context = this,
       args = arguments;
     clearTimeout(timer);
     timer = setTimeout(() => fn.apply(context, args), delay);
   };
 };
 
-// https://github.com/WebReflection/document-register-element#v1-caveat
-class HTMLCustomElement extends HTMLElement {
-  constructor(_) {
-    return (_ = super(_)).init(), _;
-  }
-  init() {}
-}
-
 const MAX_MULTI_CLAP = 10;
 
-class ApplauseButton extends HTMLCustomElement {
+class ApplauseButton extends HTMLElement {
   connectedCallback() {
     if (this._connected) {
       return;
@@ -88,7 +74,7 @@ class ApplauseButton extends HTMLCustomElement {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -10 20 20">
           <g class="sparkle">
           ${arrayOfSize(5)
-            .map(s => `<g><circle cx="0" cy="0" r="1"/></g>`)
+            .map(() => `<g><circle cx="0" cy="0" r="1"/></g>`)
             .join("")}
           </g>
         </svg>
@@ -105,7 +91,7 @@ class ApplauseButton extends HTMLCustomElement {
     // return the initial clap count as a promise
     let initialClapCountResolve;
     this._initialClapCount = new Promise(
-      resolve => (initialClapCountResolve = resolve)
+      (resolve) => (initialClapCountResolve = resolve)
     );
 
     // cache the most recent clap count returned from the server. If, after an update, the clap count
@@ -123,9 +109,9 @@ class ApplauseButton extends HTMLCustomElement {
         );
         // send the updated clap count - checking the response to see if the server-held
         // clap count has actually incremented
-        updateClaps(this.api, increment, this.url).then(updatedClapCount => {
+        updateClaps(this.api, increment, this.url).then((updatedClapCount) => {
           if (updatedClapCount === this._cachedClapCount) {
-            // if the clap number as not incremented, disable further updates
+            // if the clap number was not incremented, disable further updates
             this.classList.add("clap-limit-exceeded");
             // and reset the counter
             this._countElement.innerHTML = formatClaps(updatedClapCount);
@@ -138,7 +124,7 @@ class ApplauseButton extends HTMLCustomElement {
       }
     }, 2000);
 
-    this.addEventListener("mousedown", event => {
+    this.addEventListener("mousedown", (event) => {
       if (event.button !== 0) {
         return;
       }
@@ -155,8 +141,8 @@ class ApplauseButton extends HTMLCustomElement {
         new CustomEvent("clapped", {
           bubbles: true,
           detail: {
-            clapCount
-          }
+            clapCount,
+          },
         })
       );
 
@@ -167,7 +153,8 @@ class ApplauseButton extends HTMLCustomElement {
       this._bufferedClaps++;
       this._updateClaps();
 
-      // increment the clap count after a small pause (to allow the animation to run)
+      // increment the clap count after a small pause
+      //  - this allows the "hide" part of hideAndShow CSS animation to run
       setTimeout(() => {
         this._countElement.innerHTML = formatClaps(clapCount);
       }, 250);
@@ -182,7 +169,7 @@ class ApplauseButton extends HTMLCustomElement {
       }
     });
 
-    getClaps(this.api, this.url).then(clapCount => {
+    getClaps(this.api, this.url).then((clapCount) => {
       this.classList.remove("loading");
       this._cachedClapCount = clapCount;
       initialClapCountResolve(clapCount);

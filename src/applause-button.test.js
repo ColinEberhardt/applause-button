@@ -3,29 +3,31 @@ const toHaveClass = async (elm, expectClassName) => {
     throw new Error(`expect toHaveClass value is null`);
   }
 
-  const className = await elm.getProperty("className").then(a => a.jsonValue());
+  const className = await elm
+    .getProperty("className")
+    .then((a) => a.jsonValue());
   const classArray = className.split(" ");
   const pass = classArray.indexOf(expectClassName) !== -1;
 
   return {
     message: () =>
       `expected to ${pass ? "not " : ""}have css class "${expectClassName}"`,
-    pass: pass
+    pass,
   };
 };
 
 expect.extend({
-  toHaveClass
+  toHaveClass,
 });
 
-const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 let postData;
 
 const createPage = async (pause = false) => {
   page = await browser.newPage();
   page.setRequestInterception(true);
-  page.on("request", request => {
+  page.on("request", (request) => {
     if (request.url().startsWith("https://api.applause-button.com/get-claps")) {
       if (pause) {
         setTimeout(() => {
@@ -36,7 +38,7 @@ const createPage = async (pause = false) => {
           status: 200,
           contentType: "application/json",
           headers: { "access-control-allow-origin": "*" },
-          body: "44"
+          body: "44",
         });
       }
     } else if (
@@ -47,7 +49,7 @@ const createPage = async (pause = false) => {
         status: 200,
         contentType: "application/json",
         headers: { "access-control-allow-origin": "*" },
-        body: "44"
+        body: "44",
       });
     } else {
       request.continue();
@@ -67,7 +69,7 @@ describe("Applause button", () => {
   describe("initialisation", () => {
     it("updates the clap count with the server-returned value", async () => {
       await createPage();
-      const count = await page.$eval(".count", element => element.innerHTML);
+      const count = await page.$eval(".count", (element) => element.innerHTML);
       await expect(count).toEqual("44");
     });
 
@@ -93,7 +95,7 @@ describe("Applause button", () => {
       await createPage();
       const initialClapCount = await page.$eval(
         "applause-button",
-        e => e.initialClapCount
+        (e) => e.initialClapCount
       );
       const clapCount = await initialClapCount;
       expect(clapCount).toEqual(44);
@@ -111,7 +113,7 @@ describe("Applause button", () => {
     it("send the updated clap count to the server", async () => {
       await createPage();
       await clickTheButton();
-      await pause(2500);
+      await pause(2200);
       expect(postData).toEqual('"1,3.3.0"');
     });
 
@@ -122,7 +124,7 @@ describe("Applause button", () => {
       });
       await clickTheButton();
       await clickTheButton();
-      await pause(2500);
+      await pause(2200);
       expect(postData).toEqual('"1,3.3.0"');
     });
 
@@ -130,9 +132,8 @@ describe("Applause button", () => {
       await createPage();
       for (let i = 0; i < 15; i++) {
         await clickTheButton(page);
-        await pause(10);
       }
-      await pause(2500);
+      await pause(2200);
       expect(postData).toEqual('"10,3.3.0"');
     });
   });

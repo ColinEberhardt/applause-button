@@ -8,8 +8,8 @@
   position: absolute;
   width: $size;
   height: $size;
-  margin-left: (100% - $size) / 2;
-  margin-top: (100% - $size) / 2;
+  margin-left: calc((100% - $size) / 2);
+  margin-top: calc((100% - $size) / 2);
 }
 
 @mixin position-fill() {
@@ -105,10 +105,10 @@ applause-button {
     }
 
     $elements: 5;
-    $degrees: 360deg / $elements;
+    $degrees: calc(360deg / $elements);
     @for $i from 0 to $elements {
       g:nth-child(#{$i + 1}) {
-        transform: rotate($degrees * $i) translateX(10px);
+        transform: rotate(calc($degrees * $i)) translateX(10px);
       }
     }
   }
@@ -124,11 +124,11 @@ applause-button {
 
   // CSS that is toggled to fire one-time animations
   &.clap {
+    @include animate-once(pulse);
+
     .sparkle circle {
       @include animate-once(explode);
     }
-
-    @include animate-once(pulse);
 
     .count {
       @include animate-once(hideThenShow);
