@@ -1,4 +1,5 @@
 import "@ungap/custom-elements";
+import "./applause-button.css";
 
 // Rollup will replace __VERSION with actual package version:
 const VERSION = "__VERSION";

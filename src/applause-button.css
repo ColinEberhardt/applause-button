@@ -1,0 +1,234 @@
+applause-button {
+  --animation-duration: 0.5s;
+
+  box-sizing: border-box;
+  display: block;
+  scale: 1;
+  /*
+    Backwards compatibility: previously width and height needed to be set,
+    but now we lock 1:1 aspect ratio and use width to determine size,
+    so we must override/reset any user-specified height
+  */
+  height: initial !important;
+}
+
+applause-button.loading {
+  opacity: 0.5;
+}
+
+applause-button * {
+  box-sizing: border-box;
+}
+
+applause-button .style-root {
+  --button-border-width: 0.125rem;
+  --disabled-color: #707070;
+  --main-color: green;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  fill: var(--main-color);
+  stroke: var(--main-color);
+  color: var(--main-color);
+}
+
+applause-button.clap-limit-exceeded .style-root {
+  fill: var(--disabled-color);
+  stroke: var(--disabled-color);
+  color: var(--disabled-color);
+}
+
+applause-button .clap-count {
+  font-size: 1.75rem;
+}
+applause-button .clap-count.visually-hidden {
+  color: transparent;
+}
+
+applause-button .shockwave {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border: var(--button-border-width) solid var(--main-color);
+  border-radius: 50%;
+  padding: 0;
+  background-color: transparent;
+  color: var(--main-color);
+  cursor: pointer;
+}
+applause-button .shockwave:focus-visible {
+  outline: 0.25rem solid;
+  outline-offset: -0.5rem;
+}
+applause-button .shockwave[aria-disabled="true"] {
+  border-color: var(--disabled-color);
+  color: var(--disabled-color);
+  cursor: not-allowed;
+}
+
+applause-button:not(.clapped) .shockwave:hover::before,
+applause-button:not(.clapped) .shockwave:focus-visible::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: calc(var(--button-border-width) * -1);
+  left: calc(var(--button-border-width) * -1);
+  bottom: calc(var(--button-border-width) * -1);
+  right: calc(var(--button-border-width) * -1);
+  border-radius: 50%;
+  color: inherit;
+  animation-name: shockwave;
+  animation-duration: 1s;
+  animation-timing-function: ease-in;
+}
+
+applause-button svg {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  opacity: 0.8;
+  stroke: none;
+  overflow: visible;
+}
+
+applause-button svg g.hands-flat {
+  visibility: hidden;
+}
+applause-button svg g.hands-outline {
+  visibility: visible;
+}
+applause-button.clapped svg g.hands-flat {
+  visibility: visible;
+}
+applause-button.clapped svg g.hands-outline {
+  visibility: hidden;
+}
+
+applause-button svg g.sparkle circle {
+  opacity: 0;
+  stroke-width: 0;
+}
+
+/* CSS that is toggled to fire clap animation */
+applause-button.clap {
+  animation-name: pulse;
+  animation-duration: var(--animation-duration);
+}
+applause-button.clap .clap-count {
+  animation-name: hideThenShow;
+  animation-duration: var(--animation-duration);
+}
+applause-button.clap svg g.sparkle circle {
+  animation-name: starPulse;
+  animation-duration: var(--animation-duration);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  applause-button.clap .clap-count {
+    animation-name: slideOutThenIn;
+  }
+  applause-button.clap svg g.sparkle circle {
+    animation-name: starExplode;
+  }
+  applause-button:not(.clapped) .shockwave:hover::before,
+  applause-button:not(.clapped) .shockwave:focus-visible::before {
+    animation-iteration-count: infinite;
+  }
+}
+
+@keyframes starPulse {
+  0% {
+    opacity: 0;
+    transform: translateX(1.5rem);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(1.5rem);
+  }
+}
+
+@keyframes starExplode {
+  0% {
+    opacity: 0;
+    transform: translateX(1.125rem);
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(2rem);
+  }
+}
+
+@keyframes shockwave {
+  0% {
+    opacity: 1;
+    box-shadow: 0 0 0.125rem;
+  }
+  100% {
+    opacity: 0;
+    box-shadow:
+      0 0 3rem,
+      inset 0 0 0.625rem;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes slideOutThenIn {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  25% {
+    opacity: 0;
+    transform: translateY(-0.625rem);
+  }
+  50% {
+    transform: translateY(0.625rem);
+  }
+  75% {
+    opacity: 0;
+    transform: translateY(0.625rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hideThenShow {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
