@@ -1,145 +1,159 @@
-@mixin animate-once($name) {
-  animation-name: $name;
-  animation-duration: 0.5s;
-  animation-iteration-count: 1;
-}
-
-@mixin centered-square($size) {
-  position: absolute;
-  width: $size;
-  height: $size;
-  margin-left: calc((100% - $size) / 2);
-  margin-top: calc((100% - $size) / 2);
-}
-
-@mixin position-fill() {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
 applause-button {
-  position: relative;
-  cursor: pointer;
+  --disabled-color: #707070;
+  --animation-duration: 0.5s;
+  --button-border-width: 0.125rem;
 
-  .style-root {
-    @include position-fill();
-
-    &:after {
-      @include position-fill();
-      content: " ";
-      display: block;
-      border-radius: 50%;
-      border: 1px solid;
-    }
-    &:hover:after:not(.clap-limit-exceeded) {
-      border-color: inherit;
-    }
-  }
+  box-sizing: border-box;
+  display: block;
+  scale: 1;
+  /*
+    Backwards compatibility: previously width and height needed to be set,
+    but now we lock 1:1 aspect ratio and use width to determine size,
+    so we must override/reset any user-specified height
+  */
+  height: initial !important;
 
   &.loading {
     opacity: 0.5;
   }
 
-  .shockwave {
-    @include position-fill();
-    border-radius: 50%;
+  /* CSS that is toggled to fire clap animation */
+  &.clap {
+    animation-name: pulse;
+    animation-duration: var(--animation-duration);
+
+    .clap-count {
+      animation-name: hideThenShow;
+      animation-duration: var(--animation-duration);
+    }
+    svg g.sparkle circle {
+      animation-name: starPulse;
+      animation-duration: var(--animation-duration);
+    }
   }
 
-  svg {
-    @include centered-square(60%);
-    @include position-fill();
-    opacity: 0.8;
-    stroke: none;
-    // annoyingly bootstrap has a higher precedence rule that sets overflow to hidden
-    // hence the bang-important
-    overflow: visible !important;
+  &.clap-limit-exceeded div {
+    fill: var(--disabled-color) !important;
+    stroke: var(--disabled-color) !important;
+    color: var(--disabled-color) !important;
+  }
 
-    g.flat {
-      visibility: hidden;
-    }
-    g.outline {
+  &.clapped svg {
+    g.hands-flat {
       visibility: visible;
     }
-  }
-
-  &.clap-limit-exceeded {
-    cursor: inherit;
-    div {
-      fill: gray !important;
-      stroke: gray !important;
-      color: gray !important;
-    }
-
-  }
-
-  &.clapped {
-    svg {
-      g.flat {
-        visibility: visible;
-      }
-      g.outline {
-        visibility: hidden;
-      }
+    g.hands-outline {
+      visibility: hidden;
     }
   }
 
-  .count-container {
-    position: absolute;
-    top: -40%;
-    width: 100%;
-    color: gray;
-    user-select: none;
-
-    .count {
-      text-align: center;
-    }
-  }
-
-  g.sparkle {
-    circle {
-      opacity: 0;
-      stroke-width: 0;
-    }
-
-    $elements: 5;
-    $degrees: calc(360deg / $elements);
-    @for $i from 0 to $elements {
-      g:nth-child(#{$i + 1}) {
-        transform: rotate(calc($degrees * $i)) translateX(10px);
-      }
-    }
-  }
-
-  &:hover:not(.clapped) {
-    .shockwave {
+  &:not(.clapped) .shockwave {
+    &:focus-visible::before,
+    &:hover::before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: calc(var(--button-border-width) * -1);
+      left: calc(var(--button-border-width) * -1);
+      bottom: calc(var(--button-border-width) * -1);
+      right: calc(var(--button-border-width) * -1);
+      border-radius: 50%;
+      color: inherit;
       animation-name: shockwave;
       animation-duration: 1s;
-      animation-iteration-count: infinite;
       animation-timing-function: ease-in;
     }
   }
 
-  // CSS that is toggled to fire one-time animations
-  &.clap {
-    @include animate-once(pulse);
+  * {
+    box-sizing: border-box;
+  }
 
-    .sparkle circle {
-      @include animate-once(explode);
+  .style-root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .clap-count {
+    font-size: 1.75rem;
+
+    &.visually-hidden {
+      color: transparent;
+    }
+  }
+
+  .shockwave {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-width: var(--button-border-width);
+    border-style: solid;
+    border-radius: 50%;
+    padding: 0;
+    background-color: transparent;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 0.25rem solid;
+      outline-offset: -0.1875rem;
     }
 
-    .count {
-      @include animate-once(hideThenShow);
+    &[aria-disabled="true"] {
+      border-color: var(--disabled-color) !important;
+      cursor: not-allowed;
+    }
+  }
+
+  svg {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 60%;
+    height: 60%;
+    opacity: 0.8;
+    stroke: none;
+    overflow: visible;
+
+    g.hands-flat {
+      visibility: hidden;
+    }
+
+    g.hands-outline {
+      visibility: visible;
+    }
+
+    g.sparkle circle {
+      opacity: 0;
+      stroke-width: 0;
     }
   }
 }
 
-@keyframes explode {
+@media (prefers-reduced-motion: no-preference) {
+  applause-button {
+    &.clap {
+      .clap-count {
+        animation-name: slideOutThenIn;
+      }
+      svg g.sparkle circle {
+        animation-name: starExplode;
+      }
+    }
+    &:not(.clapped) .shockwave {
+      &:focus-visible::before,
+      &:hover::before {
+        animation-iteration-count: infinite;
+      }
+    }
+  }
+}
+
+@keyframes starPulse {
   0% {
-    transform: translateX(10px);
     opacity: 0;
+    transform: translateX(1.5rem);
   }
   20% {
     opacity: 1;
@@ -149,20 +163,35 @@ applause-button {
   }
   100% {
     opacity: 0;
-    transform: translateX(25px);
+    transform: translateX(1.5rem);
+  }
+}
+
+@keyframes starExplode {
+  0% {
+    opacity: 0;
+    transform: translateX(1.125rem);
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(2rem);
   }
 }
 
 @keyframes shockwave {
   0% {
-    transform: scale(1);
-    box-shadow: 0 0 2px;
     opacity: 1;
+    box-shadow: 0 0 0.125rem;
   }
   100% {
-    transform: scale(1);
     opacity: 0;
-    box-shadow: 0 0 50px, inset 0 0 10px;
+    box-shadow: 0 0 3rem, inset 0 0 0.625rem;
   }
 }
 
@@ -178,24 +207,39 @@ applause-button {
   }
 }
 
-@keyframes hideThenShow {
+@keyframes slideOutThenIn {
   0% {
     opacity: 1;
     transform: translateY(0);
   }
-  20% {
+  25% {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-0.625rem);
   }
   50% {
-    transform: translateY(10px);
+    transform: translateY(0.625rem);
   }
-  80% {
-    transform: translateY(10px);
+  75% {
     opacity: 0;
+    transform: translateY(0.625rem);
   }
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes hideThenShow {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

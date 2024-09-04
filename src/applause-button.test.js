@@ -1,3 +1,11 @@
+const {
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+} = require("@jest/globals");
+
 const toHaveClass = async (elm, expectClassName) => {
   if (!elm) {
     throw new Error(`expect toHaveClass value is null`);
@@ -20,15 +28,15 @@ expect.extend({
   toHaveClass,
 });
 
-const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const VERSION = "3.3.0";
+const BASE_URL = "https://api.applause-button.com";
+let serverClapCount;
 
-let postData;
-
-const createPage = async (pause = false) => {
-  page = await browser.newPage();
-  page.setRequestInterception(true);
+const loadPage = async (pause = false) => {
+  await jestPuppeteer.resetPage();
+  await page.setRequestInterception(true);
   page.on("request", (request) => {
-    if (request.url().startsWith("https://api.applause-button.com/get-claps")) {
+    if (request.url().startsWith(`${BASE_URL}/get-claps`)) {
       if (pause) {
         setTimeout(() => {
           request.abort();
@@ -38,18 +46,16 @@ const createPage = async (pause = false) => {
           status: 200,
           contentType: "application/json",
           headers: { "access-control-allow-origin": "*" },
-          body: "44",
+          body: `${serverClapCount}`,
         });
       }
-    } else if (
-      request.url().startsWith("https://api.applause-button.com/update-claps")
-    ) {
-      postData = request.postData();
+    } else if (request.url().startsWith(`${BASE_URL}/update-claps`)) {
+      serverClapCount += Number(request.postData().split(",")[0]);
       request.respond({
         status: 200,
         contentType: "application/json",
         headers: { "access-control-allow-origin": "*" },
-        body: "44",
+        body: `${serverClapCount}`,
       });
     } else {
       request.continue();
@@ -58,83 +64,113 @@ const createPage = async (pause = false) => {
   await page.goto("http://localhost:8080");
 };
 
-const clickTheButton = async () =>
-  await page.evaluate(() => {
-    document
-      .querySelector("applause-button")
-      .dispatchEvent(new MouseEvent("mousedown"));
+describe("Applause button", () => {
+  beforeEach(() => {
+    serverClapCount = 3;
   });
 
-describe("Applause button", () => {
-  describe("initialisation", () => {
-    it("updates the clap count with the server-returned value", async () => {
-      await createPage();
-      const count = await page.$eval(".count", (element) => element.innerHTML);
-      await expect(count).toEqual("44");
+  describe("loading", () => {
+    it("initialises in loading state", async () => {
+      await loadPage(true);
+      const applauseButton = await page.$("applause-button");
+      await expect(applauseButton).toHaveClass("loading");
+    });
+  });
+
+  describe("initialised", () => {
+    beforeAll(async () => {
+      await loadPage();
     });
 
-    it("initialises in loading state", async () => {
-      await createPage(true);
-      const button = await page.$("applause-button");
-      await expect(button).toHaveClass("loading");
+    it("updates the clap count with the server-returned value", async () => {
+      const clapCount = await page.$eval(
+        ".clap-count",
+        (element) => element.innerHTML
+      );
+      expect(clapCount).toEqual(`${serverClapCount}`);
     });
 
     it("removes loading state when clap count retrieved", async () => {
-      await createPage();
-      const button = await page.$("applause-button");
-      await expect(button).not.toHaveClass("loading");
+      const applauseButton = await page.$("applause-button");
+      await expect(applauseButton).not.toHaveClass("loading");
     });
 
     it("is not in clapped state", async () => {
-      await createPage();
-      const button = await page.$(".style-root");
-      await expect(button).not.toHaveClass("clapped");
+      const applauseButton = await page.$("applause-button");
+      await expect(applauseButton).not.toHaveClass("clapped");
     });
 
     it("initial clap count resolves to the server-returned value", async () => {
-      await createPage();
       const initialClapCount = await page.$eval(
         "applause-button",
         (e) => e.initialClapCount
       );
       const clapCount = await initialClapCount;
-      expect(clapCount).toEqual(44);
+      expect(clapCount).toEqual(serverClapCount);
     });
   });
 
   describe("clicked", () => {
+    // default 5000ms is dangerously close to our longest test runs!
+    const timeout = 10000;
+    let clapButton;
+
+    beforeEach(async () => {
+      await loadPage();
+      clapButton = page.locator(
+        '::-p-aria([role="button"][name="applaud post"])'
+      );
+    });
+
     it("updates clapped state", async () => {
-      await createPage();
-      await clickTheButton();
-      const button = await page.$("applause-button");
-      await expect(button).toHaveClass("clapped");
+      await clapButton.click();
+      const applauseButton = await page.$("applause-button");
+      await expect(applauseButton).toHaveClass("clapped");
     });
 
-    it("send the updated clap count to the server", async () => {
-      await createPage();
-      await clickTheButton();
-      await pause(2200);
-      expect(postData).toEqual('"1,3.3.0"');
+    it("updates clap count on the page", async () => {
+      const initialCount = serverClapCount;
+      await clapButton.click();
+      await page.waitForSelector(`.clap-count::-p-text(${initialCount + 1})`);
     });
 
-    it("ensure that only a single clap is registered if not in multiclap mode", async () => {
-      await createPage();
-      await page.evaluate(() => {
-        document.querySelector("applause-button").multiclap = false;
-      });
-      await clickTheButton();
-      await clickTheButton();
-      await pause(2200);
-      expect(postData).toEqual('"1,3.3.0"');
-    });
+    it(
+      "sends the updated clap count to the server",
+      async () => {
+        await clapButton.click();
+        const request = await page.waitForRequest((request) =>
+          request.url().startsWith(`${BASE_URL}/update-claps`)
+        );
+        expect(request.postData()).toEqual(`"1,${VERSION}"`);
+      },
+      timeout
+    );
 
-    it("ensure the max clap count is not exceeded when multiclapping", async () => {
-      await createPage();
-      for (let i = 0; i < 15; i++) {
-        await clickTheButton(page);
-      }
-      await pause(2200);
-      expect(postData).toEqual('"10,3.3.0"');
-    });
+    it(
+      "only a single clap is registered if not in multiclap mode",
+      async () => {
+        await page.evaluate(() => {
+          document.querySelector("applause-button").multiclap = false;
+        });
+        await clapButton.click({ count: 3, delay: 5 });
+        const request = await page.waitForRequest((request) =>
+          request.url().startsWith(`${BASE_URL}/update-claps`)
+        );
+        expect(request.postData()).toEqual(`"1,${VERSION}"`);
+      },
+      timeout
+    );
+
+    it(
+      "max clap count is not exceeded when multiclapping",
+      async () => {
+        await clapButton.click({ count: 11, delay: 5 });
+        const request = await page.waitForRequest((request) =>
+          request.url().startsWith(`${BASE_URL}/update-claps`)
+        );
+        expect(request.postData()).toEqual(`"10,${VERSION}"`);
+      },
+      timeout
+    );
   });
 });
