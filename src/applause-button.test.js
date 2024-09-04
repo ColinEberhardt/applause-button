@@ -28,7 +28,7 @@ expect.extend({
   toHaveClass,
 });
 
-const VERSION = "3.3.0";
+const VERSION = process.env.npm_package_version;
 const BASE_URL = "https://api.applause-button.com";
 let serverClapCount;
 
