@@ -1,6 +1,8 @@
 # Applause Button
+
 [![Backers on Open Collective](https://opencollective.com/applause-button/backers/badge.svg)](#backers)
- [![Sponsors on Open Collective](https://opencollective.com/applause-button/sponsors/badge.svg)](#sponsors) 
+ [![Sponsors on Open Collective](https://opencollective.com/applause-button/sponsors/badge.svg)](#sponsors)
+ [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
 A zero-configuration button for adding applause / claps / kudos to web pages and blog-posts.
 
