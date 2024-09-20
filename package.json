@@ -47,6 +47,9 @@
   "jest": {
     "preset": "jest-puppeteer"
   },
+  "engines": {
+    "node": ">=18.17.0"
+  },
   "browserslist": ["partially supports custom-elementsv1"],
   "packageManager": "yarn@1.22.22"
 }

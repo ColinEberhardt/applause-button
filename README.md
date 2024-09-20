@@ -1,6 +1,9 @@
 # Applause Button
+
 [![Backers on Open Collective](https://opencollective.com/applause-button/backers/badge.svg)](#backers)
- [![Sponsors on Open Collective](https://opencollective.com/applause-button/sponsors/badge.svg)](#sponsors) 
+[![Sponsors on Open Collective](https://opencollective.com/applause-button/sponsors/badge.svg)](#sponsors)
+[![npm latest version](https://img.shields.io/npm/v/applause-button/latest.svg)](https://www.npmjs.com/package/applause-button)
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
 A zero-configuration button for adding applause / claps / kudos to web pages and blog-posts.
 
@@ -26,13 +29,16 @@ For more information, visit the [project website](https://colineberhardt.github.
 
 ## Development
 
+![Node LTS](https://img.shields.io/node/v-lts/applause-button?logo=nodedotjs)
+
 Clone this repo and install dependencies via yarn:
 
 ~~~
 $ yarn
 ~~~
 
-Use `yarn test` to run the test suite. These use Jest as the test runner, and Puppeteer as a headless Chrome instance, allowing the applause button to make API requests (with appropriate responses faked within the test code).
+Use `yarn test` to run the test suite. These use Jest as the test runner, and Puppeteer as a headless Chrome instance,
+allowing the applause button to make API requests (with appropriate responses faked within the test code).
 
 You can build project and start watching the `src` folder for changes as follows:
 
@@ -43,14 +49,11 @@ $ yarn run watch
 Run `yarn test:server` to start a dev server in another process. 
 
 
-
-
-
-
-
 ### Releases
 
-All releases are created automatically via [semantic release](https://github.com/semantic-release/semantic-release) running on Travis.
+All releases are created automatically via
+[semantic release](https://github.com/semantic-release/semantic-release)
+running on Travis.
 
 
 ## Contributors
@@ -68,7 +71,8 @@ Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com
 
 ## Sponsors
 
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/applause-button#sponsor)]
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website.
+[[Become a sponsor](https://opencollective.com/applause-button#sponsor)]
 
 <a href="https://opencollective.com/applause-button/sponsor/0/website" target="_blank"><img src="https://opencollective.com/applause-button/sponsor/0/avatar.svg"></a>
 <a href="https://opencollective.com/applause-button/sponsor/1/website" target="_blank"><img src="https://opencollective.com/applause-button/sponsor/1/avatar.svg"></a>
