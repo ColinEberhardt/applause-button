@@ -1,5 +1,10 @@
-module.exports = {
+export default {
   server: {
-    command: "node node_modules/.bin/http-server -p 8080"
-  }
+    command: "npx serve -l 8080",
+    port: 8080,
+  },
+  launch: {
+    headless: "shell",
+    //dumpio: true,
+  },
 };
