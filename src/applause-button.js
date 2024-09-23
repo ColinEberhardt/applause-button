@@ -194,18 +194,6 @@ class ApplauseButton extends HTMLElement {
     return this.getAttribute("color");
   }
 
-  set api(api) {
-    if (api) {
-      this.setAttribute("api", api);
-    } else {
-      this.removeAttribute("api");
-    }
-  }
-
-  get api() {
-    return this.getAttribute("api") || API;
-  }
-
   set color(color) {
     if (color) {
       this.setAttribute("color", color);
@@ -215,6 +203,22 @@ class ApplauseButton extends HTMLElement {
     this._updateRootColor();
   }
 
+  get api() {
+    return this.getAttribute("api") || API;
+  }
+
+  set api(api) {
+    if (api) {
+      this.setAttribute("api", api);
+    } else {
+      this.removeAttribute("api");
+    }
+  }
+
+  get url() {
+    return this.getAttribute("url");
+  }
+
   set url(url) {
     if (url) {
       this.setAttribute("url", url);
@@ -222,10 +226,6 @@ class ApplauseButton extends HTMLElement {
       this.removeAttribute("url");
     }
     this._updateRootColor();
-  }
-
-  get url() {
-    return this.getAttribute("url");
   }
 
   get multiclap() {
@@ -255,11 +255,7 @@ class ApplauseButton extends HTMLElement {
       return;
     }
     const rootColor = this.getAttribute("color") || "green";
-    this._styleRootElement.style.fill = rootColor;
-    this._styleRootElement.style.stroke = rootColor;
-    this._styleRootElement.style.color = rootColor;
-    this._clapButton.style.borderColor = rootColor;
-    this._clapButton.style.color = rootColor;
+    this._styleRootElement.style.setProperty("--main-color", rootColor);
   }
 
   _setClapLimitReached() {

@@ -32,12 +32,6 @@ applause-button {
     }
   }
 
-  &.clap-limit-exceeded div {
-    fill: var(--disabled-color) !important;
-    stroke: var(--disabled-color) !important;
-    color: var(--disabled-color) !important;
-  }
-
   &.clapped svg {
     g.hands-flat {
       visibility: visible;
@@ -74,6 +68,17 @@ applause-button {
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+
+    --main-color: green;
+    fill: var(--main-color);
+    stroke: var(--main-color);
+    color: var(--main-color);
+  }
+
+  &.clap-limit-exceeded .style-root {
+    fill: var(--disabled-color);
+    stroke: var(--disabled-color);
+    color: var(--disabled-color);
   }
 
   .clap-count {
@@ -88,11 +93,11 @@ applause-button {
     position: relative;
     width: 100%;
     aspect-ratio: 1;
-    border-width: var(--button-border-width);
-    border-style: solid;
+    border: var(--button-border-width) solid var(--main-color);
     border-radius: 50%;
     padding: 0;
     background-color: transparent;
+    color: var(--main-color);
     cursor: pointer;
 
     &:focus-visible {
@@ -101,7 +106,8 @@ applause-button {
     }
 
     &[aria-disabled="true"] {
-      border-color: var(--disabled-color) !important;
+      border-color: var(--disabled-color);
+      color: var(--disabled-color);
       cursor: not-allowed;
     }
   }
