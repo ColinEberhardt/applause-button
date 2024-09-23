@@ -27,6 +27,12 @@ The above will render an applause button, persisting claps and clap counts.
 
 For more information, visit the [project website](https://colineberhardt.github.io/applause-button/);
 
+## Browser Support
+
+All browsers with
+[partial support of Custom Elements](https://caniuse.com/custom-elementsv1); check current state at
+[Browserslist](https://browsersl.ist/#q=partially+supports+custom-elementsv1).
+
 ## Development
 
 ![Node LTS](https://img.shields.io/node/v-lts/applause-button?logo=nodedotjs)
