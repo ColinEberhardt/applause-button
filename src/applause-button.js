@@ -148,22 +148,23 @@ class ApplauseButton extends HTMLElement {
       this._bufferedClaps++;
       this._updateClaps();
 
+      // fire a custom event with the updated count
+      const clapCount =
+        Number(this._countElement.innerHTML.replace(",", "")) + 1;
+      this.dispatchEvent(
+        new CustomEvent("clapped", {
+          bubbles: true,
+          detail: {
+            clapCount,
+          },
+        })
+      );
+
       // increment the clap count after a small pause
       //  - this allows the "hide" part of hideAndShow CSS animation to run
       setTimeout(() => {
-        const clapCount =
-          Number(this._countElement.innerHTML.replace(",", "")) + 1;
         this._countElement.innerHTML = formatClaps(clapCount);
         this._countElement.classList.remove("visually-hidden");
-        // fire a DOM event with the updated count
-        this.dispatchEvent(
-          new CustomEvent("clapped", {
-            bubbles: true,
-            detail: {
-              clapCount,
-            },
-          })
-        );
       }, 100);
 
       // check whether we've exceeded the max claps
