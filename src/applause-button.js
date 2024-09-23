@@ -124,7 +124,7 @@ class ApplauseButton extends HTMLElement {
           .then((updatedClapCount) => {
             if (updatedClapCount === this._cachedClapCount) {
               // if the clap number was not incremented, disable further updates
-              this._setClapLimitReached();
+              this._setClapDisabled();
               // and reset the counter
               this._countElement.innerHTML = formatClaps(this._cachedClapCount);
             } else {
@@ -139,7 +139,7 @@ class ApplauseButton extends HTMLElement {
 
     this._clickHandler = () => {
       this.classList.add("clapped");
-      if (this._isClapLimitReached()) return;
+      if (this._isClapDisabled()) return;
 
       // trigger the animation
       toggleClass(this, "clap");
@@ -171,7 +171,7 @@ class ApplauseButton extends HTMLElement {
         !this.multiclap ||
         this._bufferedClaps + this._totalClaps >= MAX_MULTI_CLAP
       ) {
-        this._setClapLimitReached();
+        this._setClapDisabled();
       }
     };
     this._clapButton.addEventListener("click", this._clickHandler);
@@ -261,14 +261,14 @@ class ApplauseButton extends HTMLElement {
     this._styleRootElement.style.setProperty("--main-color", rootColor);
   }
 
-  _setClapLimitReached() {
+  _setClapDisabled() {
     this._clapButton.setAttribute("aria-disabled", "true");
     this._clapButton.setAttribute("title", NO_MORE_CLAPS);
     this._clapButton.setAttribute("aria-description", NO_MORE_CLAPS);
     this.classList.add("clap-limit-exceeded");
   }
 
-  _isClapLimitReached() {
+  _isClapDisabled() {
     return this._clapButton.hasAttribute("aria-disabled");
   }
 }
