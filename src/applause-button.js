@@ -78,6 +78,9 @@ class ApplauseButton extends HTMLElement {
             <g class="sparkle">
             ${arrayOfSize(SPARKLE_COUNT)
               .map((_, i) => {
+                // This puts a ring of "sparkle dots" around the clapping hands image, visible as
+                // an animation whenever the user claps. We use some light maths to ensure the dots
+                // are evenly spaced, starting at North.
                 const transform = `rotate(calc(360deg * ${i} / ${SPARKLE_COUNT} + 90deg))`;
                 return `<g style="transform: ${transform}"><circle cx="0" cy="0" r="1"/></g>`;
               })
