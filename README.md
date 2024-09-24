@@ -19,7 +19,7 @@ The applause button is a custom element that can be added directly to the page. 
 </head>
 <body>
   <!-- add the button! -->
-  <applause-button style="width: 58px; height: 58px;"/>
+  <applause-button style="width: 4rem" />
 </body>
 ```
 
@@ -27,27 +27,38 @@ The above will render an applause button, persisting claps and clap counts.
 
 For more information, visit the [project website](https://colineberhardt.github.io/applause-button/);
 
+## Browser Support
+
+All browsers with
+[partial support of Custom Elements](https://caniuse.com/custom-elementsv1); check current state at
+[Browserslist](https://browsersl.ist/#q=partially+supports+custom-elementsv1).
+
 ## Development
 
 ![Node LTS](https://img.shields.io/node/v-lts/applause-button?logo=nodedotjs)
 
-Clone this repo and install dependencies via yarn:
+Clone this repo then install dependencies via yarn:
 
-~~~
-$ yarn
-~~~
+```shell
+yarn
+```
 
 Use `yarn test` to run the test suite. These use Jest as the test runner, and Puppeteer as a headless Chrome instance,
 allowing the applause button to make API requests (with appropriate responses faked within the test code).
 
-You can build project and start watching the `src` folder for changes as follows:
+You can build the code and start watching the `src` folder for changes as follows:
 
-~~~
-$ yarn run watch
-~~~
+```shell
+yarn watch
+```
 
-Run `yarn test:server` to start a dev server in another process. 
+Then run the following command in another terminal, to serve a test page containing an applause-button:
 
+```shell
+yarn test:serve
+```
+
+Navigate to http://localhost:8081 to view the test page; remember to refresh the page after code changes.
 
 ### Releases
 
@@ -55,19 +66,16 @@ All releases are created automatically via
 [semantic release](https://github.com/semantic-release/semantic-release)
 running on Travis.
 
-
 ## Contributors
 
 This project exists thanks to all the people who contribute. 
 <a href="https://github.com/ColinEberhardt/applause-button/graphs/contributors"><img src="https://opencollective.com/applause-button/contributors.svg?width=890&button=false" /></a>
-
 
 ## Backers
 
 Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/applause-button#backer)]
 
 <a href="https://opencollective.com/applause-button#backers" target="_blank"><img src="https://opencollective.com/applause-button/backers.svg?width=890"></a>
-
 
 ## Sponsors
 
