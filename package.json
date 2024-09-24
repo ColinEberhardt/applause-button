@@ -1,7 +1,7 @@
 {
   "name": "applause-button",
   "description": "A zero-configuration button for adding applause / claps / kudos to web pages and blog-posts",
-  "version": "0.0.0-development",
+  "version": "3.4.0",
   "main": "dist/applause-button.js",
   "type": "module",
   "license": "MIT",
@@ -12,6 +12,7 @@
     "@jest/globals": "^29.7.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.7",
     "@rollup/plugin-terser": "^0.4.4",
     "chokidar-cli": "^3.0.0",
     "jest": "^29.7.0",

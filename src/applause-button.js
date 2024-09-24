@@ -1,6 +1,7 @@
 import "@ungap/custom-elements";
 
-const VERSION = "3.3.0";
+// Rollup will replace __VERSION with actual package version:
+const VERSION = "__VERSION";
 const API = "https://api.applause-button.com";
 
 const getClaps = (api, url) =>
