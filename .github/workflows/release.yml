@@ -1,0 +1,35 @@
+name: Release
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  release:
+    name: Release master
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to publish a GitHub release
+      issues: write # to comment on released issues
+      pull-requests: write # to comment on released PRs
+      id-token: write # to enable provenance
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+      - name: Install dependencies
+        run: |
+          corepack enable
+          yarn install --frozen-lockfile
+      - name: Verify dependency provenance
+        run: yarn npm audit signatures
+      - name: Perform release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: yarn run semantic-release

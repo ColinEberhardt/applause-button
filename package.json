@@ -1,7 +1,7 @@
 {
   "name": "applause-button",
   "description": "A zero-configuration button for adding applause / claps / kudos to web pages and blog-posts",
-  "version": "3.4.0",
+  "version": "0.0.0-semantically-managed",
   "main": "dist/applause-button.js",
   "type": "module",
   "license": "MIT",
@@ -20,9 +20,8 @@
     "puppeteer": "^23.2.2",
     "rollup": "^4.21.2",
     "rollup-plugin-import-css": "^3.5.1",
-    "semantic-release": "^22.0.12",
-    "serve": "^14.2.3",
-    "travis-deploy-once": "^5.0.11"
+    "semantic-release": "^24.1.2",
+    "serve": "^14.2.3"
   },
   "scripts": {
     "test": "yarn run test:prettier && yarn run test:jest",
@@ -31,7 +30,7 @@
     "test:serve": "serve -l 8081",
     "build": "rollup -c",
     "watch": "rollup -c -w",
-    "prepublish": "yarn run build",
+    "prepack": "yarn run build",
     "travis-deploy-once": "travis-deploy-once",
     "semantic-release": "semantic-release"
   },
@@ -47,6 +46,9 @@
   },
   "engines": {
     "node": ">=18.17.0"
+  },
+  "publishConfig": {
+    "provenance": true
   },
   "browserslist": ["partially supports custom-elementsv1"],
   "packageManager": "yarn@1.22.22"
