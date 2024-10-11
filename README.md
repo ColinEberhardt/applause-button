@@ -66,7 +66,7 @@ Navigate to http://localhost:8081 to view the test page; remember to refresh the
 
 All releases are created automatically via
 [semantic release](https://github.com/semantic-release/semantic-release)
-running on Travis.
+running as a GitHub workflow.
 
 ## Contributors
 

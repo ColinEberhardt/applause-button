@@ -8,6 +8,7 @@ jobs:
   release:
     name: Release master
     runs-on: ubuntu-latest
+    if: github.repository == 'ColinEberhardt/applause-button'
     permissions:
       contents: write # to publish a GitHub release
       issues: write # to comment on released issues
