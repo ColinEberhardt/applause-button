@@ -10,17 +10,13 @@ export default {
     resolve(),
     replace({
       values: {
-        '__VERSION': process.env.npm_package_version,
+        __VERSION: process.env.npm_package_version,
       },
       preventAssignment: true,
     }),
     css({ minify: true, output: "applause-button.css" }),
     babel({
-      presets: [
-        [
-          "@babel/preset-env"
-        ]
-      ],
+      presets: [["@babel/preset-env"]],
       babelHelpers: "bundled",
     }),
     terser(),
