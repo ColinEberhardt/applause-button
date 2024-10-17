@@ -47,6 +47,18 @@
   "engines": {
     "node": ">=18.17.0"
   },
+  "release": {
+    "plugins": [
+      ["@semantic-release/commit-analyzer", {
+        "releaseRules": [
+          { "type": "docs", "release": "patch" }
+        ]
+      }],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
+  },
   "publishConfig": {
     "provenance": true
   },
