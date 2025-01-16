@@ -7,7 +7,7 @@
 
 A zero-configuration button for adding applause / claps / kudos to web pages and blog-posts.
 
-**NOTICE:** The free and hosted version of this service is no longer operational. If you want to use the applause button on your website you are encouraged to host the back-end yourself using the code from the following repo: https://github.com/ColinEberhardt/applause-button-server
+**NOTICE:** The free and hosted version of this service is no longer operational. If you want to use the applause button on your website you are encouraged to host the back-end yourself using the code from the following repo: https://github.com/ColinEberhardt/applause-button-server. Alternatively, you can use the service hosted by a community member at `https://applause.chabouis.fr`.
 
 ## Minimal example
 
@@ -21,7 +21,7 @@ The applause button is a custom element that can be added directly to the page. 
 </head>
 <body>
   <!-- add the button! -->
-  <applause-button style="width: 4rem" />
+  <applause-button style="width: 4rem" api="https://applause.chabouis.fr" />
 </body>
 ```
 
