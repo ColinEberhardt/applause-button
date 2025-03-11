@@ -3,7 +3,7 @@ import "./applause-button.css";
 
 // Rollup will replace __VERSION with actual package version:
 const VERSION = "__VERSION";
-const API = "https://api.applause-button.com";
+const API = "https://applause.chabouis.fr";
 
 const getClaps = (api, url) =>
   fetch(`${api}/get-claps` + (url ? `?url=${url}` : ""))
