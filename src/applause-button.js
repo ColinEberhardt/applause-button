@@ -20,7 +20,6 @@ const updateClaps = (api, claps, url) =>
     headers: {
       "Content-Type": "text/plain", //avoids preflight request
     },
-    referrerPolicy: "no-referrer-when-downgrade", // send the full referrer to the applause server, to have by default a clap per page 
     body: JSON.stringify(`${claps},${VERSION}`),
   })
     .then((response) => response.text())
